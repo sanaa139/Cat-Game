@@ -2,6 +2,7 @@ package entity;
 
 import main.GamePanel;
 import main.KeyHandler;
+import tiles.TileManager;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -13,12 +14,13 @@ public class Player extends Entity{
     LoadImagesManager loadImagesManager;
     private int counter;
 
-    public Player(GamePanel gamePanel, KeyHandler keyHandler){
+    public Player(GamePanel gamePanel, KeyHandler keyHandler, TileManager tileManager){
+        super(gamePanel, tileManager);
         this.gamePanel = gamePanel;
         this.keyHandler = keyHandler;
         loadImagesManager = new LoadImagesManager("player");
-        positionX = 100;
-        positionY = 200;
+        positionX = 200;
+        positionY = 352;
         image = loadImagesManager.getLeft1();
         direction = "stay";
         counter = 0;
@@ -27,17 +29,23 @@ public class Player extends Entity{
     public void update(){
         if(keyHandler.leftPressed){
             direction = "left";
-            this.move(-2, 0);
+            if(this.canMove(-2, 0, direction)) {
+                this.move(-2, 0);
+            }
         }
         if(keyHandler.rightPressed){
             direction = "right";
-            this.move(2, 0);
+            if(this.canMove(2, 0, direction)) {
+                this.move(2, 0);
+            }
         }
         if(!keyHandler.leftPressed && !keyHandler.rightPressed){
             direction = "stay";
         }
-        if(keyHandler.upPressed){
-            direction = "up";
+        if(keyHandler.upPressed || !jumpEnd){
+            this.jumpEnd = false;
+            System.out.println("JESTESMY W UP");
+            this.jump((double) 1 /gamePanel.FPS);
         }
         counter++;
     }
@@ -46,6 +54,7 @@ public class Player extends Entity{
     public void draw(Graphics2D g2d){
         if(counter >= 10){
             switch(direction){
+
                 case "left":
                     if(!image.equals(loadImagesManager.getLeft2())){
                         image = loadImagesManager.getLeft2();
@@ -60,11 +69,6 @@ public class Player extends Entity{
                         image = loadImagesManager.getRight1();
                     }
                     break;
-                case "up":
-                    System.out.println("JESTESMY W UP");
-                    this.jump((double) 1 /gamePanel.FPS);
-
-                    break;
                 case "stay":
                     if(image.equals(loadImagesManager.getLeft1()) || image.equals(loadImagesManager.getLeft2())){
                         image = loadImagesManager.getLeftInactive();
@@ -74,6 +78,6 @@ public class Player extends Entity{
             }
             counter = 0;
         }
-        g2d.drawImage(image, (int)positionX, (int)positionY, gamePanel.tileSize, gamePanel.tileSize, null);
+        g2d.drawImage(image, (int)positionX, (int)positionY, gamePanel.getTileSize(), gamePanel.getTileSize(), null);
     }
 }
