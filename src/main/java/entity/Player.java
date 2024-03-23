@@ -47,7 +47,7 @@ public class Player extends Entity{
             System.out.println("JESTESMY W UP");
             this.jump((double) 1 /gamePanel.FPS);
         }
-        //this.applyGravity((double) 1/gamePanel.FPS);
+        this.applyGravity((double) 1/gamePanel.FPS);
         counter++;
     }
 

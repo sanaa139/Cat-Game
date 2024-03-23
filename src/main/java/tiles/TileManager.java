@@ -116,7 +116,6 @@ public class TileManager {
         for(int col = 0; col < tilesArray.length; col++){
             for(int row = 0; row < tilesArray[col].length; row++){
                 g2d.drawImage(tilesArray[col][row].getImage(), col * gamePanel.getTileSize(), row * gamePanel.getTileSize(), gamePanel.getTileSize(), gamePanel.getTileSize(), null);
-                System.out.print(tilesArray[col][row].isCollisional() + " ");
             }
             System.out.println();
         }
