@@ -19,8 +19,8 @@ public class Player extends Entity{
         this.gamePanel = gamePanel;
         this.keyHandler = keyHandler;
         loadImagesManager = new LoadImagesManager("player");
-        positionX = 200;
-        positionY = 352;
+        positionX = 400;
+        positionY = 200;
         image = loadImagesManager.getLeft1();
         direction = "stay";
         counter = 0;
@@ -47,6 +47,7 @@ public class Player extends Entity{
             System.out.println("JESTESMY W UP");
             this.jump((double) 1 /gamePanel.FPS);
         }
+        //this.applyGravity((double) 1/gamePanel.FPS);
         counter++;
     }
 

@@ -19,7 +19,7 @@ public class Entity {
         this.gamePanel = gamePanel;
         this.tileManager = tileManager;
         velocityX = 0;
-        velocityY = -2;
+        velocityY = 0;
         gravity = 2f;
         jumpEnd = true;
     }
@@ -32,10 +32,8 @@ public class Entity {
             colIndex = (int) ((positionX + x + 6) / gamePanel.getTileSize());
         }
         int rowIndex = (int) ((positionY + y) / gamePanel.getTileSize());
-        System.out.println("pos x: " + (positionX + x + gamePanel.getTileSize())  + " col: " + colIndex);
-        System.out.println("pos y: " + (positionY + y) + " row: " + rowIndex);
 
-        if(tileManager.getTilesArray()[rowIndex][colIndex] != null){
+        if(tileManager.getTilesArray()[colIndex][rowIndex].isCollisional()){
             System.out.println("NIE MOZNA WEJSC");
             return false;
         }
@@ -47,6 +45,15 @@ public class Entity {
         positionX += deltaX;
         positionY += deltaY;
     }
+
+    public void applyGravity(double deltaTime){
+
+            positionY += velocityY;
+
+
+        velocityY += gravity * deltaTime;
+    }
+
 
     public void jump(double deltaTime){
         positionX += velocityX + velocityX * deltaTime;
