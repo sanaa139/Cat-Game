@@ -8,12 +8,12 @@ public class LoadImagesManager {
     private Image left1, left2, left_inactive, right1, right2, right_inactive;
     LoadImagesManager(String entity){
         try{
-            left1 = ImageIO.read(getClass().getResourceAsStream("/" + entity + "/left1.jpg"));
-            left2 = ImageIO.read(getClass().getResourceAsStream("/" + entity + "/left2.jpg"));
-            left_inactive = ImageIO.read(getClass().getResourceAsStream("/" + entity + "/left_inactive.jpg"));
-            right1 = ImageIO.read(getClass().getResourceAsStream("/" + entity + "/right1.jpg"));
-            right2 = ImageIO.read(getClass().getResourceAsStream("/" + entity + "/right2.jpg"));
-            right_inactive = ImageIO.read(getClass().getResourceAsStream("/" + entity + "/right_inactive.jpg"));
+            left1 = ImageIO.read(getClass().getResourceAsStream("/" + entity + "/left1.png"));
+            left2 = ImageIO.read(getClass().getResourceAsStream("/" + entity + "/left2.png"));
+            left_inactive = ImageIO.read(getClass().getResourceAsStream("/" + entity + "/left_inactive.png"));
+            right1 = ImageIO.read(getClass().getResourceAsStream("/" + entity + "/right1.png"));
+            right2 = ImageIO.read(getClass().getResourceAsStream("/" + entity + "/right2.png"));
+            right_inactive = ImageIO.read(getClass().getResourceAsStream("/" + entity + "/right_inactive.png"));
         }catch(IOException e){
             e.printStackTrace();
         }
