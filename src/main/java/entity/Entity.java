@@ -1,6 +1,7 @@
 package entity;
 
 import main.GamePanel;
+import tiles.Tile;
 import tiles.TileManager;
 
 import java.awt.*;
@@ -8,9 +9,9 @@ import java.awt.*;
 public class Entity {
     protected double positionX, positionY, velocityX, velocityY;
     protected float gravity;
+    protected int size;
     protected Image image;
     protected String direction;
-    protected boolean jumpEnd;
 
     protected GamePanel gamePanel;
     protected TileManager tileManager;
@@ -20,16 +21,15 @@ public class Entity {
         this.tileManager = tileManager;
         velocityX = 0;
         velocityY = 2;
-        gravity = 2f;
-        jumpEnd = true;
+        gravity = 0.2f;
     }
 
     public boolean canMove(double x, double y, String direction){
         int colIndex;
         if(direction.equals("right")){
-            colIndex = (int) ((positionX + x + gamePanel.getTileSize() - 8) / gamePanel.getTileSize());
+            colIndex = (int) ((positionX + x + size) / gamePanel.getTileSize());
         }else{
-            colIndex = (int) ((positionX + x + 6) / gamePanel.getTileSize());
+            colIndex = (int) ((positionX + x) / gamePanel.getTileSize());
         }
         int rowIndex = (int) ((positionY + y) / gamePanel.getTileSize());
 
@@ -47,8 +47,8 @@ public class Entity {
     public void applyGravity(double deltaTime){
         int colIndex = (int) (positionX / gamePanel.getTileSize());
         int rowIndex = (int) ((positionY + velocityY + gamePanel.getTileSize()) / gamePanel.getTileSize());
-        if(!tileManager.getTilesArray()[colIndex][rowIndex].isCollisional()){
-            positionY += velocityY;
+        Tile tile = tileManager.getTilesArray()[colIndex][rowIndex];
+        if(!tile.isCollisional()){
             velocityY += gravity * deltaTime;
         }else{
             velocityY = 0;
@@ -57,12 +57,8 @@ public class Entity {
 
 
     public void jump(double deltaTime){
-        positionX += velocityX + velocityX * deltaTime;
-        positionY += velocityY + velocityY * deltaTime;
-        System.out.println("x:" + positionX);
-        System.out.println("y:" + positionY);
-
-        velocityY += gravity * deltaTime;
+        velocityY = -2;
+        System.out.println("Entity(x=" + positionX + ", y=" + positionY + ")");
 
         /*
         if(positionY >= 200){

@@ -117,7 +117,6 @@ public class TileManager {
             for(int row = 0; row < tilesArray[col].length; row++){
                 g2d.drawImage(tilesArray[col][row].getImage(), col * gamePanel.getTileSize(), row * gamePanel.getTileSize(), gamePanel.getTileSize(), gamePanel.getTileSize(), null);
             }
-            System.out.println();
         }
     }
 

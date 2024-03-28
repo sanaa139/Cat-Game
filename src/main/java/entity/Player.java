@@ -19,14 +19,16 @@ public class Player extends Entity{
         this.gamePanel = gamePanel;
         this.keyHandler = keyHandler;
         loadImagesManager = new LoadImagesManager("player");
-        positionX = 400;
-        positionY = 250;
-        image = loadImagesManager.getLeft1();
-        direction = "stay";
+        this.size = 10 * gamePanel.getScale();
+        this.positionX = 500;
+        this.positionY = 150;
+        this.image = loadImagesManager.getLeft1();
+        this.direction = "stay";
         counter = 0;
     }
 
-    public void update(){
+    public void update(double deltaTime){
+        System.out.println("UPDATE");
         if(keyHandler.leftPressed){
             direction = "left";
             if(this.canMove(-2, 0, direction)) {
@@ -42,13 +44,19 @@ public class Player extends Entity{
         if(!keyHandler.leftPressed && !keyHandler.rightPressed){
             direction = "stay";
         }
-        if(keyHandler.upPressed || !jumpEnd){
-            this.jumpEnd = false;
+        if(keyHandler.upPressed){
+            // if standing in place
             System.out.println("JESTESMY W UP");
-            this.jump((double) 1 /gamePanel.FPS);
+            this.jump(deltaTime);
         }
-        this.applyGravity((double) 1/gamePanel.FPS);
+        this.applyGravity(deltaTime);
+        this.applyVelocity(deltaTime);
         counter++;
+    }
+
+    private void applyVelocity(double deltaTime) {
+        this.positionX += deltaTime*this.velocityX;
+        this.positionY += deltaTime*this.velocityY;
     }
 
 
@@ -79,6 +87,11 @@ public class Player extends Entity{
             }
             counter = 0;
         }
-        g2d.drawImage(image, (int)positionX, (int)positionY, gamePanel.getTileSize(), gamePanel.getTileSize(), null);
+        g2d.drawImage(image, (int)positionX, (int)positionY, this.size, gamePanel.getTileSize(), null);
+    }
+
+    public void restart() {
+        positionX = 500;
+        positionY = 125;
     }
 }

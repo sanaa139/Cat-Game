@@ -6,10 +6,11 @@ import tiles.TileManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.SQLOutput;
 
 public class GamePanel extends JPanel implements Runnable{
-    public final int originalTileSize = 16;
-    public int scale = 2;
+    private final int originalTileSize = 16;
+    private int scale = 2;
     private final int tileSize = originalTileSize * scale;
     private final int maxColNum = 32;
     private final int maxRowNum = 16;
@@ -50,7 +51,11 @@ public class GamePanel extends JPanel implements Runnable{
             lastTime = currentTime;
 
             if(delta >= 1){
-                update();
+                if (keyHandler.restartPressed){
+                    player.restart();
+                }
+                System.out.println(delta);
+                update(delta);
                 repaint();
                 delta--;
                 drawCount++;
@@ -64,8 +69,8 @@ public class GamePanel extends JPanel implements Runnable{
         }
     }
 
-    public void update(){
-        player.update();
+    public void update(double deltaTime){
+        player.update(deltaTime);
     }
 
     public void paintComponent(Graphics g){
@@ -87,5 +92,9 @@ public class GamePanel extends JPanel implements Runnable{
 
     public int getMaxRowNum(){
         return maxRowNum;
+    }
+
+    public int getScale(){
+        return scale;
     }
 }
