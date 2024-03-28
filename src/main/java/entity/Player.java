@@ -20,7 +20,7 @@ public class Player extends Entity{
         this.keyHandler = keyHandler;
         loadImagesManager = new LoadImagesManager("player");
         positionX = 400;
-        positionY = 200;
+        positionY = 250;
         image = loadImagesManager.getLeft1();
         direction = "stay";
         counter = 0;
