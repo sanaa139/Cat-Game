@@ -54,7 +54,6 @@ public class GamePanel extends JPanel implements Runnable{
                 if (keyHandler.restartPressed){
                     player.restart();
                 }
-                System.out.println(delta);
                 update(delta);
                 repaint();
                 delta--;

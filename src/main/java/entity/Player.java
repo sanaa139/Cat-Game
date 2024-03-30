@@ -19,16 +19,16 @@ public class Player extends Entity{
         this.gamePanel = gamePanel;
         this.keyHandler = keyHandler;
         loadImagesManager = new LoadImagesManager("player");
-        this.size = 10 * gamePanel.getScale();
-        this.positionX = 500;
-        this.positionY = 150;
+        this.height = gamePanel.getTileSize();
+        this.width = 10 * gamePanel.getScale();
+        this.positionX = 320;
+        this.positionY = 256;
         this.image = loadImagesManager.getLeft1();
         this.direction = "stay";
         counter = 0;
     }
 
     public void update(double deltaTime){
-        System.out.println("UPDATE");
         if(keyHandler.leftPressed){
             direction = "left";
             if(this.canMove(-2, 0, direction)) {
@@ -49,8 +49,8 @@ public class Player extends Entity{
             System.out.println("JESTESMY W UP");
             this.jump(deltaTime);
         }
-        this.applyGravity(deltaTime);
-        this.applyVelocity(deltaTime);
+        //this.applyGravity(deltaTime);
+        //this.applyVelocity(deltaTime);
         counter++;
     }
 
@@ -87,7 +87,7 @@ public class Player extends Entity{
             }
             counter = 0;
         }
-        g2d.drawImage(image, (int)positionX, (int)positionY, this.size, gamePanel.getTileSize(), null);
+        g2d.drawImage(image, (int)positionX, (int)positionY, this.width, this.height, null);
     }
 
     public void restart() {
