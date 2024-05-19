@@ -6,22 +6,27 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLOutput;
 
 public class TileManager {
     private GamePanel gamePanel;
     private Tile[][] tilesArray;
+    private Tile[][] decorationsTilesArray;
     private final Tile[] wallsArray;
     private final Tile[] wallsCornersArray;
     private final Tile[] backgroundsWallsArray;
+    private final Tile[] decorationsArray;
     private Tile backgroundTile;
 
     public TileManager(GamePanel gamePanel){
         this.gamePanel = gamePanel;
 
         tilesArray = new Tile[gamePanel.getMaxColNum()][gamePanel.getMaxRowNum()];
+        decorationsTilesArray = new Tile[gamePanel.getMaxColNum()][gamePanel.getMaxRowNum()];
         wallsArray = new Tile[8];
         wallsCornersArray = new Tile[4];
         backgroundsWallsArray = new Tile[13];
+        decorationsArray = new Tile[4];
 
         loadSprites();
         createMap();
@@ -29,12 +34,13 @@ public class TileManager {
 
     private void loadSprites(){
         try {
-            backgroundTile = new Tile(ImageIO.read(getClass().getResourceAsStream("/tiles/background/background.jpg")), gamePanel, "BLACK_BACKGROUND");
+            backgroundTile = new Tile(ImageIO.read(getClass().getResourceAsStream("/tiles/background/background.jpg")), gamePanel, false,"BLACK_BACKGROUND");
         }catch(IOException e){
             e.printStackTrace();
         }
 
         loadWallSprites();
+        loadDecorationsSprites();
     }
 
     private void loadWallSprites(){
@@ -49,9 +55,23 @@ public class TileManager {
                 wallsCornersArray[i - 1] = tile;
             }
             for(int i = 1; i <= backgroundsWallsArray.length; i++){
-                tile = new Tile(ImageIO.read(getClass().getResourceAsStream("/tiles/background/backgroundWall" + i + ".jpg")), gamePanel, "BACKGROUND " + i);
+                tile = new Tile(ImageIO.read(getClass().getResourceAsStream("/tiles/background/backgroundWall" + i + ".jpg")), gamePanel, false,"BACKGROUND " + i);
                 backgroundsWallsArray[i - 1] = tile;
             }
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void loadDecorationsSprites(){
+        try{
+            Tile tile;
+            for(int i = 1; i <= decorationsArray.length - 1; i++){
+                tile = new Tile(ImageIO.read(getClass().getResourceAsStream("/tiles/decorations/platform" + i + ".png")), gamePanel, true, "PLATFORM " + i, 15, gamePanel.getTileSize());
+                decorationsArray[i - 1] = tile;
+            }
+            tile = new Tile(ImageIO.read(getClass().getResourceAsStream("/tiles/decorations/platform4.png")), gamePanel, true, "PLATFORM4", 14, gamePanel.getTileSize());
+            decorationsArray[3] = tile;
         }catch(IOException e){
             e.printStackTrace();
         }
@@ -60,7 +80,7 @@ public class TileManager {
     private void createMap(){
         try {
             ClassLoader classLoader = getClass().getClassLoader();
-            InputStream inputStream = classLoader.getResourceAsStream("maps/map1.txt");
+            InputStream inputStream = classLoader.getResourceAsStream("maps/map1/map1.txt");
             InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
             BufferedReader reader = new BufferedReader(streamReader);
 
@@ -106,7 +126,35 @@ public class TileManager {
                 row++;
                 line = reader.readLine();
             }
+            reader.close();
 
+            inputStream = classLoader.getResourceAsStream("maps/map1/decorations_map1.txt");
+            streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+            reader = new BufferedReader(streamReader);
+
+            row = 0;
+
+            line = reader.readLine();
+            while (line != null) {
+                String[] words = line.split("\\s+");
+                int i = 0;
+                for(int col = 0; col < gamePanel.getMaxColNum(); col++){
+                    Tile tile = switch (words[i]) {
+                        case "P1" -> decorationsArray[0].copy();
+                        case "P2" -> decorationsArray[1].copy();
+                        case "P3" -> decorationsArray[2].copy();
+                        case "P4" -> decorationsArray[3].copy();
+                        default -> null;
+                    };
+                    if(tile != null) {
+                        tile.setPosition(col * gamePanel.getTileSize(), row * gamePanel.getTileSize());
+                        decorationsTilesArray[col][row] = tile;
+                    }
+                    i++;
+                }
+                row++;
+                line = reader.readLine();
+            }
             reader.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -117,15 +165,19 @@ public class TileManager {
         for(int col = 0; col < tilesArray.length; col++){
             for(int row = 0; row < tilesArray[col].length; row++){
                 Vector position = tilesArray[col][row].getPosition();
-                //System.out.print(tilesArray[col][row].name + ": col = " + col + ", row = " + row + ", posX = " + position.getX1() + ", posY: = " + position.getY1() + " ");
-                g2d.drawImage(tilesArray[col][row].getImage(), (int) position.getX1(), (int) position.getY1(), gamePanel.getTileSize(), gamePanel.getTileSize(), null);
+                g2d.drawImage(tilesArray[col][row].getImage(), (int) position.getX1(), (int) position.getY1(), tilesArray[col][row].getWidth(), tilesArray[col][row].getHeight(), null);
+                if(decorationsTilesArray[col][row] != null) {
+                    g2d.drawImage(decorationsTilesArray[col][row].getImage(), (int) position.getX1(), (int) position.getY1(), decorationsTilesArray[col][row].getWidth(), decorationsTilesArray[col][row].getHeight(), null);
+                }
             }
-            //System.out.println();
         }
-        //System.out.println("KONIEC PRINTU TILE");
     }
 
     public Tile[][] getTilesArray() {
         return tilesArray;
+    }
+
+    public Tile[][] getDecorationsTilesArray() {
+        return decorationsTilesArray;
     }
 }

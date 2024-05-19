@@ -9,21 +9,12 @@ public class Tile {
     private Image image;
     private boolean collisional;
     private final Vector position;
+    private int height, width;
     private Vector upperWallLine, rightWallLine, lowerWallLine, leftWallLine;
     private GamePanel gamePanel;
 
     public String name;
 
-    public Tile(Image image, GamePanel gamePanel, String name){
-        this.image = image;
-        this.gamePanel = gamePanel;
-        position = new Vector();
-        collisional = false;
-
-        this.name = name;
-
-        upperWallLine = new Vector();
-    }
     public Tile(Image image, GamePanel gamePanel, boolean collisional, String name){
         this.image = image;
         this.gamePanel = gamePanel;
@@ -31,8 +22,27 @@ public class Tile {
         this.collisional = collisional;
 
         this.name = name;
+        height = gamePanel.getTileSize();
+        width = gamePanel.getTileSize();
 
         upperWallLine = new Vector();
+        rightWallLine = new Vector();
+        leftWallLine = new Vector();
+    }
+
+    public Tile(Image image, GamePanel gamePanel, boolean collisional, String name, int height, int width){
+        this.image = image;
+        this.gamePanel = gamePanel;
+        position = new Vector();
+        this.collisional = collisional;
+
+        this.name = name;
+        this.height = height;
+        this.width = width;
+
+        upperWallLine = new Vector();
+        rightWallLine = new Vector();
+        leftWallLine = new Vector();
     }
 
     public Image getImage(){
@@ -57,19 +67,45 @@ public class Tile {
 
         upperWallLine.setX1(position.getX1());
         upperWallLine.setY1(position.getY1());
-        upperWallLine.setX2(position.getX1() + gamePanel.getTileSize() - 1);
+        upperWallLine.setX2(position.getX1() + width - 1);
         upperWallLine.setY2(position.getY1());
+
+        rightWallLine.setX1(position.getX1() + width - 1);
+        rightWallLine.setY1(position.getY1());
+        rightWallLine.setX2(position.getX1() + width - 1);
+        rightWallLine.setY2(position.getY1() + height - 1);
+
+        leftWallLine.setX1(position.getX1());
+        leftWallLine.setY1(position.getY1());
+        leftWallLine.setX2(position.getX1());
+        leftWallLine.setY2(position.getY1() + height - 1);
     }
 
     public Vector getUpperWallLine(){
         return upperWallLine;
     }
 
+    public Vector getRightWallLine(){
+        return rightWallLine;
+    }
+
+    public Vector getLeftWallLine(){
+        return leftWallLine;
+    }
+
     public Vector getPosition(){
         return position;
     }
 
+    public int getHeight(){
+        return height;
+    }
+
+    public int getWidth(){
+        return width;
+    }
+
     public Tile copy() {
-        return new Tile(image, gamePanel, collisional, name);
+        return new Tile(image, gamePanel, collisional, name, height, width);
     }
 }

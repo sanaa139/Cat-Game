@@ -3,6 +3,7 @@ package entity;
 import main.GamePanel;
 import tiles.Tile;
 import tiles.TileManager;
+import tiles.Vector;
 
 import java.awt.*;
 import java.sql.SQLOutput;
@@ -17,31 +18,160 @@ public class Entity {
     protected GamePanel gamePanel;
     protected TileManager tileManager;
 
+    protected HitBox hitbox;
+
     Entity(GamePanel gamePanel, TileManager tileManager){
         this.gamePanel = gamePanel;
         this.tileManager = tileManager;
+        this.hitbox = new HitBox();
         velocityX = 0;
-        velocityY = -5;
+        velocityY = 0;
         gravityX = 0;
         gravityY = 0.2f;
-
     }
 
-    public boolean canMove(double x, double y, String direction){
-        int colIndex;
-        if(direction.equals("right")){
-            colIndex = (int) ((positionX + x + width) / gamePanel.getTileSize());
-        }else{
-            colIndex = (int) ((positionX + x) / gamePanel.getTileSize());
-        }
-        int rowIndex = (int) ((positionY + y) / gamePanel.getTileSize());
 
-        if(tileManager.getTilesArray()[colIndex][rowIndex].isCollisional()){
-            System.out.println("col: " + (colIndex + 1) + " row: " + (rowIndex + 1) + " collisional");
-            return false;
+    private double linesIntersectionPoint(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4){
+        double divider = (x4 - x3) * (y2 - y1) - (y4 - y3) * (x2 - x1);
+
+        if(divider != 0){
+            double alpha = ((x4 - x3) * (y3 - y1) - (y4 - y3) * (x3 - x1)) / divider;
+            double beta = ((x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1)) / divider;
+
+            if(alpha >= 0 && alpha <= 1 && beta >= 0 && beta <= 1){
+                return alpha;
+            }
         }
-        System.out.println("col: " + (colIndex + 1) + " row: " + (rowIndex + 1) + " NOT collisional");
-        return true;
+        return -1;
+    }
+
+    private void doLinesIntersects(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, String direction){
+        double alpha = linesIntersectionPoint(x1, y1, x2, y2, x3, y3, x4, y4);
+        if(alpha != -1){
+            if(direction.equals("left")) {
+                positionX = x1 + alpha * (x2 - x1) + 1;
+            }else {
+                positionX = x1 + alpha * (x2 - x1) - width + 1;
+            }
+
+            if(y2 > positionY){
+                positionY = y1 + alpha * (y2 - y1) - height + 1;
+            }else{
+                positionY = y1 + alpha * (y2 - y1);
+            }
+        }
+    }
+
+    private boolean doLinesIntersects(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4){
+        double alpha = linesIntersectionPoint(x1, y1, x2, y2, x3, y3, x4, y4);
+        if(alpha != -1){
+            return true;
+        }
+        return false;
+    }
+
+    public void canMove(double velocityX, double velocityY, String direction){
+        if(direction.equals("left")) {
+            int colIndex = (int) ((hitbox.getLeftWallLine().getX1() + velocityX) / gamePanel.getTileSize());
+            int rowIndex = (int) ((hitbox.getLeftWallLine().getY1()) / gamePanel.getTileSize());
+            int rowIndex2 = (int) ((hitbox.getLeftWallLine().getY2()) / gamePanel.getTileSize());
+
+            if(tileManager.getTilesArray()[colIndex][rowIndex].isCollisional()) {
+                doLinesIntersects(
+                        hitbox.getLeftWallLine().getX1(),
+                        hitbox.getLeftWallLine().getY1(),
+                        hitbox.getLeftWallLine().getX1() + velocityX,
+                        hitbox.getLeftWallLine().getY1() + velocityY,
+                        tileManager.getTilesArray()[colIndex][rowIndex].getRightWallLine().getX1(),
+                        tileManager.getTilesArray()[colIndex][rowIndex].getRightWallLine().getY1(),
+                        tileManager.getTilesArray()[colIndex][rowIndex].getRightWallLine().getX2(),
+                        tileManager.getTilesArray()[colIndex][rowIndex].getRightWallLine().getY2(),
+                        "left"
+                );
+            }else if(tileManager.getTilesArray()[colIndex][rowIndex2].isCollisional()){
+                doLinesIntersects(
+                        hitbox.getLeftWallLine().getX2(),
+                        hitbox.getLeftWallLine().getY2(),
+                        hitbox.getLeftWallLine().getX2() + velocityX,
+                        hitbox.getLeftWallLine().getY2() + velocityY,
+                        tileManager.getTilesArray()[colIndex][rowIndex2].getRightWallLine().getX1(),
+                        tileManager.getTilesArray()[colIndex][rowIndex2].getRightWallLine().getY1(),
+                        tileManager.getTilesArray()[colIndex][rowIndex2].getRightWallLine().getX2(),
+                        tileManager.getTilesArray()[colIndex][rowIndex2].getRightWallLine().getY2(),
+                        "left"
+                );
+            }else {
+                for (int i = 0; i <= height - 1; i++) {
+                    rowIndex = (int) ((positionY + i) / gamePanel.getTileSize());
+                    if(tileManager.getDecorationsTilesArray()[colIndex][rowIndex] != null && tileManager.getDecorationsTilesArray()[colIndex][rowIndex].isCollisional()) {
+                        if (doLinesIntersects(
+                                positionX,
+                                positionY + i,
+                                positionX + velocityX,
+                                positionY + i + velocityY,
+                                tileManager.getDecorationsTilesArray()[colIndex][rowIndex].getRightWallLine().getX1(),
+                                tileManager.getDecorationsTilesArray()[colIndex][rowIndex].getRightWallLine().getY1(),
+                                tileManager.getDecorationsTilesArray()[colIndex][rowIndex].getRightWallLine().getX2(),
+                                tileManager.getDecorationsTilesArray()[colIndex][rowIndex].getRightWallLine().getY2()
+                        )) {
+                            return;
+                        }
+                    }
+
+                }
+                move(velocityX, velocityY);
+            }
+        }else if(direction.equals("right")){
+            int colIndex = (int) ((positionX + width - 1 + velocityX) / gamePanel.getTileSize());
+            int rowIndex = (int) ((positionY + velocityY) / gamePanel.getTileSize());
+            int rowIndex2 = (int) ((positionY + height - 1 + velocityY) / gamePanel.getTileSize());
+
+            if(tileManager.getTilesArray()[colIndex][rowIndex].isCollisional()) {
+                doLinesIntersects(
+                        positionX + width - 1,
+                        positionY,
+                        positionX + width - 1 + velocityX,
+                        positionY + velocityY,
+                        tileManager.getTilesArray()[colIndex][rowIndex].getLeftWallLine().getX1(),
+                        tileManager.getTilesArray()[colIndex][rowIndex].getLeftWallLine().getY1(),
+                        tileManager.getTilesArray()[colIndex][rowIndex].getLeftWallLine().getX2(),
+                        tileManager.getTilesArray()[colIndex][rowIndex].getLeftWallLine().getY2(),
+                        "right"
+                );
+            }else if(tileManager.getTilesArray()[colIndex][rowIndex2].isCollisional()){
+                doLinesIntersects(
+                        positionX + width - 1,
+                        positionY + height - 1,
+                        positionX + width - 1 + velocityX,
+                        positionY + height - 1 + velocityY,
+                        tileManager.getTilesArray()[colIndex][rowIndex2].getLeftWallLine().getX1(),
+                        tileManager.getTilesArray()[colIndex][rowIndex2].getLeftWallLine().getY1(),
+                        tileManager.getTilesArray()[colIndex][rowIndex2].getLeftWallLine().getX2(),
+                        tileManager.getTilesArray()[colIndex][rowIndex2].getLeftWallLine().getY2(),
+                        "right"
+                );
+            }else {
+                for (int i = 0; i <= height - 1; i++) {
+                    rowIndex = (int) ((positionY + i) / gamePanel.getTileSize());
+                    if (tileManager.getDecorationsTilesArray()[colIndex][rowIndex] != null && tileManager.getDecorationsTilesArray()[colIndex][rowIndex].isCollisional()) {
+                        if (doLinesIntersects(
+                                positionX + width - 1,
+                                positionY + i,
+                                positionX + width - 1 + velocityX,
+                                positionY + i + velocityY,
+                                tileManager.getTilesArray()[colIndex][rowIndex].getLeftWallLine().getX1(),
+                                tileManager.getTilesArray()[colIndex][rowIndex].getLeftWallLine().getY1(),
+                                tileManager.getTilesArray()[colIndex][rowIndex].getLeftWallLine().getX2(),
+                                tileManager.getTilesArray()[colIndex][rowIndex].getLeftWallLine().getY2()
+                        )) {
+                            return;
+                        }
+                    }
+
+                }
+                move(velocityX, velocityY);
+            }
+        }
     }
 
     public void move(double velX, double velY){
@@ -49,52 +179,104 @@ public class Entity {
         positionY += velY;
     }
 
-    public void applyGravity(double deltaTime){
+    protected void applyGravity(double deltaTime){
         int colIndex = (int) (positionX / gamePanel.getTileSize());
-        int rowIndex = (int) ((positionY + velocityY + gamePanel.getTileSize()) / gamePanel.getTileSize());
+        int rowIndex = (int) ((positionY + velocityY + height - 1) / gamePanel.getTileSize());
         Tile tile = tileManager.getTilesArray()[colIndex][rowIndex];
-        if(!tile.isCollisional()){
-            velocityY += gravityY * deltaTime;
+        Tile decorationTile = tileManager.getDecorationsTilesArray()[colIndex][rowIndex];
+        /*
+        System.out.println("posX: " + positionX + ", posY: " + positionY);
+        System.out.println("colIndex: " + colIndex + ", rowIndex: " + rowIndex);
+        System.out.println("tile: " + tile.name);
+        if(decorationTile != null) {
+            System.out.println("dec tile: " + decorationTile.name);
         }else{
-            System.out.println("Collision with Tile(ypixels="+rowIndex*gamePanel.getTileSize()+"x=" +colIndex+"y="+rowIndex+"collisional="+tile.isCollisional()+"). Player Standing on Player(standingX="+(positionY + gamePanel.getTileSize())+")" );
-            velocityY = 0;
+            System.out.println("dec tile: null");
+        }*/
+
+        if(!tile.isCollisional() && (decorationTile == null || !decorationTile.isCollisional())){
+            positionX += deltaTime * velocityX;
+            positionY += deltaTime * velocityY;
+            velocityX += deltaTime * gravityX;
+            velocityY += deltaTime * gravityY;
+        }else if(!tile.isCollisional() && decorationTile != null){
+            if(decorationTile.isCollisional()) {
+                fallOnTheGround(colIndex, rowIndex, deltaTime, tileManager.getDecorationsTilesArray());
+            }else{
+                positionX += deltaTime * velocityX;
+                positionY += deltaTime * velocityY;
+                velocityX += deltaTime * gravityX;
+                velocityY += deltaTime * gravityY;
+            }
+        }else if(tile.isCollisional()){
+            fallOnTheGround(colIndex, rowIndex, deltaTime, tileManager.getTilesArray());
         }
     }
 
+    private void fallOnTheGround(int colIndex, int rowIndex, double deltaTime, Tile[][] arr){
+        double x1 = positionX;
+        double y1 = positionY + height - 1;
+        double x2 = x1 + (deltaTime * velocityX);
+        double y2 = y1 + (deltaTime * velocityY);
+        double x3 = arr[colIndex][rowIndex].getUpperWallLine().getX1();
+        double y3 = arr[colIndex][rowIndex].getUpperWallLine().getY1();
+        double x4 = arr[colIndex][rowIndex].getUpperWallLine().getX2();
+        double y4 = arr[colIndex][rowIndex].getUpperWallLine().getY2();
 
-    public void jump(double deltaTime){
-        int colIndex = (int) ((positionX + (deltaTime * velocityX)) / gamePanel.getTileSize());
-        int rowIndex = (int) ((positionY + (deltaTime * velocityY) + height) / gamePanel.getTileSize());
+        /*
+        System.out.println("x1: " + x1 + ", y1: " + y1);
+        System.out.println("x2: " + x2 + ", y2: " + y2);
+        System.out.println("x3: " + x3 + ", y3: " + y3);
+        System.out.println("x4: " + x4 + ", y4: " + y4);
+           */
 
-        if(tileManager.getTilesArray()[colIndex][rowIndex].isCollisional()){
-            double x1 = positionX;
-            double y1 = positionY + gamePanel.getTileSize() - 1;
-            double x2 = x1 + (deltaTime * velocityX);
-            double y2 = y1 + (deltaTime * velocityY);
-            double x3 = tileManager.getTilesArray()[colIndex][rowIndex].getUpperWallLine().getX1();
-            double y3 = tileManager.getTilesArray()[colIndex][rowIndex].getUpperWallLine().getY1();
-            double x4 = tileManager.getTilesArray()[colIndex][rowIndex].getUpperWallLine().getX2();
-            double y4 = tileManager.getTilesArray()[colIndex][rowIndex].getUpperWallLine().getY2();
+        double divider = (x4 - x3) * (y2 - y1) - (y4 - y3) * (x2 - x1);
 
-            double divider = (x4 - x3) * (y2 - y1) - (y4 - y3) * (x2 - x1);
-
+        if(divider != 0){
             double alpha = ((x4 - x3) * (y3 - y1) - (y4 - y3) * (x3 - x1)) / divider;
             double beta = ((x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1)) / divider;
-
-            if((x1 + alpha * (x2 - x1)) == (x3 + beta * (x4 - x3)) && (y1 + alpha * (y2 - y1)) == (y3 + alpha * (y4 - y3))){
+            if(alpha >= 0 && alpha <= 1 && beta >= 0 && beta <= 1) {
                 positionX = x1 + alpha * (x2 - x1);
                 positionY = y1 + alpha * (y2 - y1) - height;
 
                 velocityX = 0;
-                velocityY = -5;
+                velocityY = 0;
             }
-        }else{
-            positionX += deltaTime * velocityX;
-            positionY += deltaTime * velocityY;
-
-            velocityX += deltaTime * gravityX;
-            velocityY += deltaTime * gravityY;
         }
     }
+
+    public void setVelocityX(double velocityX){
+        this.velocityX = velocityX;
+    }
+
+    public double getVelocityX(){
+        return velocityX;
+    }
+
+    public void setVelocityY(double velocityY){
+        this.velocityY = velocityY;
+    }
+
+    public double getVelocityY(){
+        return velocityY;
+    }
+
+    public void setPositionX(double positionX){
+        this.positionX = positionX;
+    }
+
+    public double getPositionX(){
+        return positionX;
+    }
+
+    public void setPositionY(double positionY){
+        this.positionY = positionY;
+    }
+
+    public double getPositionY(){
+        return positionY;
+    }
+
+
 }
 

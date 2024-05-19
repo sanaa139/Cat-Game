@@ -20,7 +20,7 @@ public class GamePanel extends JPanel implements Runnable{
     KeyHandler keyHandler = new KeyHandler();
     TileManager tileManager = new TileManager(this);
     Player player = new Player(this, keyHandler, tileManager);
-    Ball ball = new Ball(this, tileManager);
+    //Ball ball = new Ball(this, tileManager, player);
 
     public GamePanel(){
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -70,6 +70,7 @@ public class GamePanel extends JPanel implements Runnable{
 
     public void update(double deltaTime){
         player.update(deltaTime);
+        //ball.update(deltaTime);
     }
 
     public void paintComponent(Graphics g){
@@ -77,7 +78,7 @@ public class GamePanel extends JPanel implements Runnable{
         Graphics2D g2 = (Graphics2D) g;
         tileManager.draw(g2);
         player.draw(g2);
-        ball.draw(g2);
+        //ball.draw(g2);
         g2.dispose();
     }
 
