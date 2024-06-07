@@ -28,6 +28,7 @@ public class Tile {
         upperWallLine = new Vector();
         rightWallLine = new Vector();
         leftWallLine = new Vector();
+        lowerWallLine = new Vector();
     }
 
     public Tile(Image image, GamePanel gamePanel, boolean collisional, String name, int height, int width){
@@ -43,6 +44,7 @@ public class Tile {
         upperWallLine = new Vector();
         rightWallLine = new Vector();
         leftWallLine = new Vector();
+        lowerWallLine = new Vector();
     }
 
     public Image getImage(){
@@ -79,6 +81,11 @@ public class Tile {
         leftWallLine.setY1(position.getY1());
         leftWallLine.setX2(position.getX1());
         leftWallLine.setY2(position.getY1() + height - 1);
+
+        lowerWallLine.setX1(position.getX1());
+        lowerWallLine.setY1(position.getY1() + height - 1);
+        lowerWallLine.setX2(position.getX1() + width - 1);
+        lowerWallLine.setY2(position.getY1() + height - 1);
     }
 
     public Vector getUpperWallLine(){
@@ -91,6 +98,9 @@ public class Tile {
 
     public Vector getLeftWallLine(){
         return leftWallLine;
+    }
+    public Vector getLowerWallLine(){
+        return lowerWallLine;
     }
 
     public Vector getPosition(){
