@@ -54,18 +54,13 @@ public class Player extends Entity{
         if(!keyHandler.leftPressed && !keyHandler.rightPressed){
             direction = "stay";
         }
-
         if(keyHandler.upPressed){
             this.jump();
         }
-        System.out.println("velY: " + velocityY);
         this.checkForCeilingCollision(deltaTime);
         this.applyGravity(deltaTime);
-        System.out.println("GRAVITYYYYYYY POSX: " + positionX);
         counter++;
         updateHitBox();
-        System.out.println("UPDATEEE HITBOXXXX POSX: " + positionX);
-        System.out.println("upperX1: " + hitbox.getUpperWallLine().getX1());
     }
 
     public void draw(Graphics2D g2d){
@@ -97,8 +92,8 @@ public class Player extends Entity{
             counter = 0;
         }
         g2d.drawImage(image, (int)positionX, (int)positionY, this.width, this.height, null);
-        g2d.setColor(Color.RED);
-        g2d.fillRect((int) this.hitbox.getLeftWallLine().getX1(), (int) this.hitbox.getLeftWallLine().getY1(), (int) (this.hitbox.getUpperWallLine().getX2() - this.hitbox.getUpperWallLine().getX1()),  (int) (this.hitbox.getRightWallLine().getY2() - this.hitbox.getLeftWallLine().getY1()));
+        //g2d.setColor(Color.RED);
+        //g2d.fillRect((int) this.hitbox.getLeftWallLine().getX1(), (int) this.hitbox.getLeftWallLine().getY1(), (int) (this.hitbox.getUpperWallLine().getX2() - this.hitbox.getUpperWallLine().getX1()),  (int) (this.hitbox.getRightWallLine().getY2() - this.hitbox.getLeftWallLine().getY1()));
     }
 
     public void restart() {
@@ -107,11 +102,9 @@ public class Player extends Entity{
     }
 
     private void jump(){
-        System.out.println("jump " + velocityY);
         if(velocityY == 0){
             velocityY = -5;
         }
-        System.out.println("velocity: " + velocityY);
     }
 
     private void checkForCeilingCollision(double deltaTime) {
@@ -119,29 +112,25 @@ public class Player extends Entity{
         int rowIndex = (int) ((hitbox.getUpperWallLine().getY1() + velocityY) / gamePanel.getTileSize());
         int colIndex2 = (int) (hitbox.getUpperWallLine().getX2() / gamePanel.getTileSize());
         int rowIndex2 = (int) ((hitbox.getUpperWallLine().getY2() + velocityY) / gamePanel.getTileSize());
-
-
-        if (tileManager.getTilesArray()[colIndex][rowIndex].isCollisional()) {
-            System.out.println("colIndex: " + colIndex + ", rowInde: " + rowIndex + ", name: " + tileManager.getTilesArray()[colIndex][rowIndex].name);
-            checkForCeiling(hitbox.getUpperWallLine().getX1(), hitbox.getUpperWallLine().getY1(), deltaTime, tileManager.getTilesArray(), colIndex, rowIndex, "left");
-        } else if (tileManager.getTilesArray()[colIndex2][rowIndex2].isCollisional()) {
-            System.out.println("22222colIndex: " + colIndex + ", rowInde: " + rowIndex + ", name: " + tileManager.getTilesArray()[colIndex][rowIndex].name);
-            checkForCeiling(hitbox.getUpperWallLine().getX2(), hitbox.getUpperWallLine().getY2(), deltaTime, tileManager.getTilesArray(), colIndex2, rowIndex2, "right");
-        } else {
-            if (tileManager.getDecorationsTilesArray()[colIndex][rowIndex] != null) {
-                checkForCeiling(hitbox.getUpperWallLine().getX1(), hitbox.getUpperWallLine().getY1(), deltaTime, tileManager.getDecorationsTilesArray(), colIndex, rowIndex, "left");
-            } else if (tileManager.getDecorationsTilesArray()[colIndex2][rowIndex2] != null) {
-                checkForCeiling(hitbox.getUpperWallLine().getX2(), hitbox.getUpperWallLine().getY2(), deltaTime, tileManager.getDecorationsTilesArray(), colIndex2, rowIndex2, "right");
+        if(velocityY != 0) {
+            if (tileManager.getTilesArray()[colIndex][rowIndex].isCollisional()) {
+                checkForCeiling(hitbox.getUpperWallLine().getX1(), hitbox.getUpperWallLine().getY1(), deltaTime, tileManager.getTilesArray(), colIndex, rowIndex, "left");
+            } else if (tileManager.getTilesArray()[colIndex2][rowIndex2].isCollisional()) {
+                checkForCeiling(hitbox.getUpperWallLine().getX2(), hitbox.getUpperWallLine().getY2(), deltaTime, tileManager.getTilesArray(), colIndex2, rowIndex2, "right");
+            } else {
+                if (tileManager.getDecorationsTilesArray()[colIndex][rowIndex] != null) {
+                    checkForCeiling(hitbox.getUpperWallLine().getX1(), hitbox.getUpperWallLine().getY1(), deltaTime, tileManager.getDecorationsTilesArray(), colIndex, rowIndex, "left");
+                } else if (tileManager.getDecorationsTilesArray()[colIndex2][rowIndex2] != null) {
+                    checkForCeiling(hitbox.getUpperWallLine().getX2(), hitbox.getUpperWallLine().getY2(), deltaTime, tileManager.getDecorationsTilesArray(), colIndex2, rowIndex2, "right");
+                }
             }
         }
     }
 
 
     private void checkForCeiling(double x1, double y1, double deltaTime, Tile[][] arr, int colIndex, int rowIndex, String direction){
-        System.out.println("x1: " + (x1 - padding) + ", y1: " + y1);
-        double x2 = x1; //+ (deltaTime * velocityX);
+        double x2 = x1;
         double y2 = y1 + (deltaTime * velocityY);
-        System.out.println("x2: " + (x2 + padding) + ", y2: " + y2);
         double x3 = arr[colIndex][rowIndex].getLowerWallLine().getX1();
         double y3 = arr[colIndex][rowIndex].getLowerWallLine().getY1();
         double x4 = arr[colIndex][rowIndex].getLowerWallLine().getX2();
@@ -161,7 +150,6 @@ public class Player extends Entity{
                 positionY = y1 + alpha * (y2 - y1) + 1;
                 velocityY = 0.5;
             }
-            System.out.println("newPosX: " + positionX + "newPosY: " + positionY);
         }
     }
 }
