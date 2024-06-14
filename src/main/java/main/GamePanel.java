@@ -1,6 +1,7 @@
 package main;
 
 import entity.Ball;
+import entity.Door;
 import entity.Player;
 import tiles.TileManager;
 
@@ -20,7 +21,9 @@ public class GamePanel extends JPanel implements Runnable{
     KeyHandler keyHandler = new KeyHandler();
     TileManager tileManager = new TileManager(this);
     Player player = new Player(this, keyHandler, tileManager);
-    //Ball ball = new Ball(this, tileManager, player);
+    Ball ball = new Ball(this, tileManager, player);
+    Ball[] ballsArray = {ball};
+    Door door = new Door(this, tileManager, ballsArray);
 
     public GamePanel(){
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -70,15 +73,17 @@ public class GamePanel extends JPanel implements Runnable{
 
     public void update(double deltaTime){
         player.update(deltaTime);
-        //ball.update(deltaTime);
+        ball.update(deltaTime);
+        door.update(deltaTime);
     }
 
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         tileManager.draw(g2);
+        door.draw(g2);
         player.draw(g2);
-        //ball.draw(g2);
+        ball.draw(g2);
         g2.dispose();
     }
 

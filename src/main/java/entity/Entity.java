@@ -46,7 +46,7 @@ public class Entity {
         return -1;
     }
 
-    private void doLinesIntersects(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, String direction){
+    private boolean doLinesIntersects(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, String direction){
         double alpha = linesIntersectionPoint(x1, y1, x2, y2, x3, y3, x4, y4);
         if(alpha != -1){
             if(direction.equals("left")) {
@@ -60,7 +60,9 @@ public class Entity {
             }else{
                 positionY = y1 + alpha * (y2 - y1);
             }
+            return false;
         }
+        return true;
     }
 
     private boolean doLinesIntersects(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4){
@@ -71,14 +73,14 @@ public class Entity {
         return false;
     }
 
-    public void canMove(double velocityX, double velocityY, String direction){
-        if(direction.equals("left")) {
+    public boolean canMove(double velocityX, double velocityY){
+        if(velocityX < 0) {
             int colIndex = (int) ((hitbox.getLeftWallLine().getX1() + velocityX) / gamePanel.getTileSize());
             int rowIndex = (int) ((hitbox.getLeftWallLine().getY1() + velocityY) / gamePanel.getTileSize());
             int rowIndex2 = (int) ((hitbox.getLeftWallLine().getY2() + velocityY) / gamePanel.getTileSize());
 
             if(tileManager.getTilesArray()[colIndex][rowIndex].isCollisional()) {
-                doLinesIntersects(
+                return doLinesIntersects(
                         hitbox.getLeftWallLine().getX1(),
                         hitbox.getLeftWallLine().getY1(),
                         hitbox.getLeftWallLine().getX1() + velocityX,
@@ -90,7 +92,7 @@ public class Entity {
                         "left"
                 );
             }else if(tileManager.getTilesArray()[colIndex][rowIndex2].isCollisional()){
-                doLinesIntersects(
+                return doLinesIntersects(
                         hitbox.getLeftWallLine().getX2(),
                         hitbox.getLeftWallLine().getY2(),
                         hitbox.getLeftWallLine().getX2() + velocityX,
@@ -115,20 +117,21 @@ public class Entity {
                                 tileManager.getDecorationsTilesArray()[colIndex][rowIndex].getRightWallLine().getX2(),
                                 tileManager.getDecorationsTilesArray()[colIndex][rowIndex].getRightWallLine().getY2()
                         )) {
-                            return;
+                            return false;
                         }
                     }
 
                 }
                 move(velocityX, velocityY);
+                return true;
             }
-        }else if(direction.equals("right")){
+        }else{
             int colIndex = (int) ((hitbox.getRightWallLine().getX1() + velocityX) / gamePanel.getTileSize());
             int rowIndex = (int) ((hitbox.getRightWallLine().getY1() + velocityY) / gamePanel.getTileSize());
             int rowIndex2 = (int) ((hitbox.getRightWallLine().getY2() + velocityY) / gamePanel.getTileSize());
 
             if(tileManager.getTilesArray()[colIndex][rowIndex].isCollisional()) {
-                doLinesIntersects(
+                return doLinesIntersects(
                         hitbox.getRightWallLine().getX1(),
                         hitbox.getRightWallLine().getY1(),
                         hitbox.getRightWallLine().getX1() + velocityX,
@@ -140,7 +143,7 @@ public class Entity {
                         "right"
                 );
             }else if(tileManager.getTilesArray()[colIndex][rowIndex2].isCollisional()){
-                doLinesIntersects(
+                return doLinesIntersects(
                         hitbox.getRightWallLine().getX2(),
                         hitbox.getRightWallLine().getY2(),
                         hitbox.getRightWallLine().getX2() + velocityX,
@@ -165,12 +168,13 @@ public class Entity {
                                 tileManager.getTilesArray()[colIndex][rowIndex].getLeftWallLine().getX2(),
                                 tileManager.getTilesArray()[colIndex][rowIndex].getLeftWallLine().getY2()
                         )) {
-                            return;
+                            return false;
                         }
                     }
 
                 }
                 move(velocityX, velocityY);
+                return true;
             }
         }
     }

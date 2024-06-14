@@ -2,6 +2,7 @@ package entity;
 
 import main.GamePanel;
 import tiles.TileManager;
+import tiles.Vector;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -9,6 +10,7 @@ import java.io.IOException;
 
 public class Ball extends Entity{
     Player player;
+    boolean enteredTheDoor;
     public Ball(GamePanel gamePanel, TileManager tileManager, Player player){
         super(gamePanel, tileManager);
         try {
@@ -16,17 +18,27 @@ public class Ball extends Entity{
         }catch (IOException e){
             e.printStackTrace();
         }
+        enteredTheDoor = false;
         positionX = 450;
         positionY = 200;
         width = 10;
         height = 9;
         this.player = player;
+        updateHitBox();
     }
 
     public void update(double deltaTime){
         this.applyGravity(deltaTime);
         touched();
         jumpedOn(deltaTime);
+        updateHitBox();
+    }
+
+    public void updateHitBox(){
+        this.hitbox.setLeftWallLine(new Vector(this.positionX, this.positionY, this.positionX, this.positionY + height - 1));
+        this.hitbox.setRightWallLine(new Vector(this.positionX + width - 1, this.positionY, this.positionX + width - 1, this.positionY + height - 1));
+        this.hitbox.setUpperWallLine(new Vector(this.positionX , this.positionY, this.positionX + width - 1, this.positionY));
+        this.hitbox.setLowerWallLine(new Vector(this.positionX, this.positionY + height, this.positionX + width - 1, this.positionY + height));
     }
 
     private void touched(){
@@ -43,9 +55,14 @@ public class Ball extends Entity{
         if(divider != 0){
             double alpha = ((x4 - x3) * (y3 - y1) - (y4 - y3) * (x3 - x1)) / divider;
             double beta = ((x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1)) / divider;
+            System.out.println("posX: " + positionX);
 
             if(alpha >= 0 && alpha <= 1 && beta >= 0 && beta <= 1){
-                move(2, 0);
+                if(!canMove(2, 0)){
+                    System.out.println("nie mozna przejsc");
+                    this.positionX = player.hitbox.getLeftWallLine().getX1() - player.padding - 1;
+                    System.out.println("posX po zmianie: " + positionX);
+                }
             }
         }
 
@@ -61,8 +78,14 @@ public class Ball extends Entity{
             double alpha = ((x4 - x3) * (y3 - y1) - (y4 - y3) * (x3 - x1)) / divider;
             double beta = ((x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1)) / divider;
 
+
+            System.out.println("posX: " + positionX);
             if(alpha >= 0 && alpha <= 1 && beta >= 0 && beta <= 1){
-                move(-2, 0);
+                if(!canMove(-2, 0)){
+                    System.out.println("nie mozna przejsc");
+                    this.positionX = player.hitbox.getRightWallLine().getX1() + padding + 1;
+                    System.out.println("posX po zmianie: " + positionX);
+                }
             }
         }
     }
@@ -90,6 +113,18 @@ public class Ball extends Entity{
     }
 
     public void draw(Graphics2D g2d){
-        g2d.drawImage(image, (int)positionX, (int)positionY, width, height, null);
+        if(!enteredTheDoor) {
+            g2d.drawImage(image, (int) positionX, (int) positionY, width, height, null);
+            //g2d.setColor(Color.RED);
+            //g2d.fillRect((int) this.hitbox.getLeftWallLine().getX1(), (int) this.hitbox.getLeftWallLine().getY1(), (int) (this.hitbox.getUpperWallLine().getX2() - this.hitbox.getUpperWallLine().getX1()),  (int) (this.hitbox.getRightWallLine().getY2() - this.hitbox.getLeftWallLine().getY1()));
+        }
+    }
+
+    public double getPositionX(){
+        return positionX;
+    }
+
+    public double getPositionY(){
+        return positionY;
     }
 }

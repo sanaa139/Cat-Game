@@ -14,7 +14,6 @@ public class Player extends Entity{
     GamePanel gamePanel;
     KeyHandler keyHandler;
     LoadImagesManager loadImagesManager;
-    public Ball ball;
     private int counter;
 
     public Player(GamePanel gamePanel, KeyHandler keyHandler, TileManager tileManager){
@@ -45,11 +44,11 @@ public class Player extends Entity{
     public void update(double deltaTime){
         if(keyHandler.leftPressed){
             direction = "left";
-            this.canMove(-2,0,direction);
+            this.canMove(-2,0);
         }
         if(keyHandler.rightPressed){
             direction = "right";
-            this.canMove(2,0,direction);
+            this.canMove(2,0);
         }
         if(!keyHandler.leftPressed && !keyHandler.rightPressed){
             direction = "stay";
@@ -66,25 +65,44 @@ public class Player extends Entity{
     public void draw(Graphics2D g2d){
         if(counter >= 10){
             switch(direction){
-
                 case "left":
-                    if(!image.equals(loadImagesManager.getLeft2())){
+                    if(image.equals(loadImagesManager.getLeft1())){
                         image = loadImagesManager.getLeft2();
+                    }else if(image.equals(loadImagesManager.getLeft2())){
+                        image = loadImagesManager.getLeft3();
+                    }else if(image.equals(loadImagesManager.getLeft3())){
+                        image = loadImagesManager.getLeft4();
+                    }else if(image.equals(loadImagesManager.getLeft4())){
+                        image = loadImagesManager.getLeft1();
                     }else{
                         image = loadImagesManager.getLeft1();
                     }
                     break;
                 case "right":
-                    if(!image.equals(loadImagesManager.getRight2())){
+                    if(image.equals(loadImagesManager.getRight1())){
                         image = loadImagesManager.getRight2();
+                    }else if(image.equals(loadImagesManager.getRight2())){
+                        image = loadImagesManager.getRight3();
+                    }else if(image.equals(loadImagesManager.getRight3())){
+                        image = loadImagesManager.getLeft4();
+                    }else if(image.equals(loadImagesManager.getRight4())){
+                        image = loadImagesManager.getRight1();
                     }else{
                         image = loadImagesManager.getRight1();
                     }
                     break;
                 case "stay":
-                    if(image.equals(loadImagesManager.getLeft1()) || image.equals(loadImagesManager.getLeft2())){
+                    if(image.equals(loadImagesManager.getLeft1()) || image.equals(loadImagesManager.getLeft2()) || image.equals(loadImagesManager.getLeft3()) || image.equals(loadImagesManager.getLeft4())){
                         image = loadImagesManager.getLeftInactive();
-                    }else if(image.equals(loadImagesManager.getRight1()) || image.equals(loadImagesManager.getRight2())){
+                    }else if(image.equals(loadImagesManager.getRight1()) || image.equals(loadImagesManager.getRight2()) || image.equals(loadImagesManager.getRight3()) || image.equals(loadImagesManager.getRight4())){
+                        image = loadImagesManager.getRightInactive();
+                    }else if(image.equals(loadImagesManager.getLeftInactive())){
+                        image = loadImagesManager.getLeftInactive2();
+                    }else if(image.equals(loadImagesManager.getLeftInactive2())){
+                        image = loadImagesManager.getLeftInactive();
+                    }else if(image.equals(loadImagesManager.getRightInactive())){
+                        image = loadImagesManager.getRightInactive2();
+                    }else if(image.equals(loadImagesManager.getRightInactive2())){
                         image = loadImagesManager.getRightInactive();
                     }
                     break;
