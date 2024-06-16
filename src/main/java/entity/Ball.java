@@ -11,7 +11,7 @@ import java.io.IOException;
 public class Ball extends Entity{
     Player player;
     boolean enteredTheDoor;
-    public Ball(GamePanel gamePanel, TileManager tileManager, Player player){
+    public Ball(GamePanel gamePanel, TileManager tileManager, Player player, double positionX, double positionY){
         super(gamePanel, tileManager);
         try {
             image = ImageIO.read(getClass().getResourceAsStream("/ball.png"));
@@ -19,11 +19,11 @@ public class Ball extends Entity{
             e.printStackTrace();
         }
         enteredTheDoor = false;
-        positionX = 450;
-        positionY = 200;
-        width = 10;
-        height = 9;
         this.player = player;
+        this.positionX = positionX;
+        this.positionY = positionY;
+        width = 20;
+        height = 18;
         updateHitBox();
     }
 
@@ -115,7 +115,7 @@ public class Ball extends Entity{
     public void draw(Graphics2D g2d){
         if(!enteredTheDoor) {
             g2d.drawImage(image, (int) positionX, (int) positionY, width, height, null);
-            //g2d.setColor(Color.RED);
+            //g2d.setColor(Color.GREEN);
             //g2d.fillRect((int) this.hitbox.getLeftWallLine().getX1(), (int) this.hitbox.getLeftWallLine().getY1(), (int) (this.hitbox.getUpperWallLine().getX2() - this.hitbox.getUpperWallLine().getX1()),  (int) (this.hitbox.getRightWallLine().getY2() - this.hitbox.getLeftWallLine().getY1()));
         }
     }

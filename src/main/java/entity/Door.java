@@ -13,7 +13,7 @@ public class Door extends Entity{
     private Ball[] ballsArray;
     private int counter;
     private boolean closed;
-    public Door(GamePanel gamePanel, TileManager tileManager, Ball[] ballsArray){
+    public Door(GamePanel gamePanel, TileManager tileManager, Ball[] ballsArray, double positionX, double positionY){
         super(gamePanel, tileManager);
         this.ballsArray = ballsArray;
         try {
@@ -21,8 +21,8 @@ public class Door extends Entity{
         }catch (IOException e){
             e.printStackTrace();
         }
-        positionX = 352;
-        positionY = 233;
+        this.positionX = positionX;
+        this.positionY = positionY;
         width = 46;
         height = 56;
 
@@ -50,9 +50,9 @@ public class Door extends Entity{
     }
 
     private void updateHitbox(){
-        this.hitbox.setLeftWallLine(new Vector(this.positionX + padding, this.positionY + padding * 3, this.positionX + padding, this.positionY + height - 1 ));
-        this.hitbox.setRightWallLine(new Vector(this.positionX + width - 1 - padding, this.positionY + padding * 3, this.positionX + width - 1 - padding, this.positionY + height - 1));
-        this.hitbox.setUpperWallLine(new Vector(this.positionX + padding, this.positionY + padding * 3, this.positionX + width - 1 - padding, this.positionY + padding * 3));
+        this.hitbox.setLeftWallLine(new Vector(this.positionX + padding, this.positionY + padding * 2, this.positionX + padding, this.positionY + height - 1 ));
+        this.hitbox.setRightWallLine(new Vector(this.positionX + width - 1 - padding, this.positionY + padding * 2, this.positionX + width - 1 - padding, this.positionY + height - 1));
+        this.hitbox.setUpperWallLine(new Vector(this.positionX + padding, this.positionY + padding * 2, this.positionX + width - 1 - padding, this.positionY + padding * 2));
         this.hitbox.setLowerWallLine(new Vector(this.positionX + padding, this.positionY + height, this.positionX + width - 1 - padding, this.positionY + height));
     }
 

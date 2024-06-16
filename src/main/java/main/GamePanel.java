@@ -21,9 +21,8 @@ public class GamePanel extends JPanel implements Runnable{
     KeyHandler keyHandler = new KeyHandler();
     TileManager tileManager = new TileManager(this);
     Player player = new Player(this, keyHandler, tileManager);
-    Ball ball = new Ball(this, tileManager, player);
-    Ball[] ballsArray = {ball};
-    Door door = new Door(this, tileManager, ballsArray);
+
+    GameLevelsManager gameLevelsManager = new GameLevelsManager(this, tileManager, player);
 
     public GamePanel(){
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -47,6 +46,8 @@ public class GamePanel extends JPanel implements Runnable{
         long timer = 0;
         int drawCount = 0;
 
+        GameLevel gameLevel = gameLevelsManager.getCurrentLevel();
+
         while(gameThread != null){
             currentTime = System.nanoTime();
             delta += (currentTime - lastTime) / drawInterval;
@@ -57,7 +58,7 @@ public class GamePanel extends JPanel implements Runnable{
                 if (keyHandler.restartPressed){
                     player.restart();
                 }
-                update(delta);
+                update(delta, gameLevel.getBalls(), gameLevel.getDoors());
                 repaint();
                 delta--;
                 drawCount++;
@@ -71,19 +72,28 @@ public class GamePanel extends JPanel implements Runnable{
         }
     }
 
-    public void update(double deltaTime){
+    public void update(double deltaTime, Ball[] balls, Door[] doors){
         player.update(deltaTime);
-        ball.update(deltaTime);
-        door.update(deltaTime);
+        for(Ball ball : balls){
+            ball.update(deltaTime);
+        }
+        for(Door door : doors){
+            door.update(deltaTime);
+        }
     }
 
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         tileManager.draw(g2);
-        door.draw(g2);
+        GameLevel gameLevel = gameLevelsManager.getCurrentLevel();
+        for(Door door : gameLevel.getDoors()) {
+            door.draw(g2);
+        }
         player.draw(g2);
-        ball.draw(g2);
+        for(Ball ball : gameLevel.getBalls()){
+            ball.draw(g2);
+        }
         g2.dispose();
     }
 
