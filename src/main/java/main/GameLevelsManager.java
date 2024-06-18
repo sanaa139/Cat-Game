@@ -62,12 +62,12 @@ public class GameLevelsManager {
     }
 
     private GameLevel createMap2(){
-        Ball ball1 = new Ball(gamePanel, tileManager, player, 330, 270);
-        Ball ball2 = new Ball(gamePanel, tileManager, player, 560, 238);
+        Ball ball1 = new Ball(gamePanel, tileManager, player, 224, 142);
+        Ball ball2 = new Ball(gamePanel, tileManager, player, 576, 334);
         Ball[] balls = {ball1, ball2};
 
-        Door door1 = new Door(gamePanel, tileManager, balls, 570, 296);
-        Door door2 = new Door(gamePanel, tileManager, balls, 400, 232);
+        Door door1 = new Door(gamePanel, tileManager, balls, 256, 264);
+        Door door2 = new Door(gamePanel, tileManager, balls, 786, 136);
         Door[] doors = {door1, door2};
 
         return new GameLevel(balls, doors, "map2");

@@ -26,7 +26,7 @@ public class TileManager {
         decorationsTilesArray = new Tile[gamePanel.getMaxColNum()][gamePanel.getMaxRowNum()];
         wallsArray = new Tile[8];
         wallsCornersArray = new Tile[4];
-        backgroundsWallsArray = new Tile[13];
+        backgroundsWallsArray = new Tile[17];
         decorationsArray = new Tile[4];
 
         loadSprites();
@@ -119,6 +119,10 @@ public class TileManager {
                         case "BW11" -> backgroundsWallsArray[10].copy();
                         case "BW12" -> backgroundsWallsArray[11].copy();
                         case "BW13" -> backgroundsWallsArray[12].copy();
+                        case "BW14" -> backgroundsWallsArray[13].copy();
+                        case "BW15" -> backgroundsWallsArray[14].copy();
+                        case "BW16" -> backgroundsWallsArray[15].copy();
+                        case "BW17" -> backgroundsWallsArray[16].copy();
                         default -> backgroundTile.copy();
                     };
                     tile.setPosition(col * gamePanel.getTileSize(), row * gamePanel.getTileSize());
