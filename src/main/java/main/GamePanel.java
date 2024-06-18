@@ -46,9 +46,9 @@ public class GamePanel extends JPanel implements Runnable{
         long timer = 0;
         int drawCount = 0;
 
-        GameLevel gameLevel = gameLevelsManager.getCurrentLevel();
 
         while(gameThread != null){
+            GameLevel gameLevel = gameLevelsManager.getCurrentLevel();
             currentTime = System.nanoTime();
             delta += (currentTime - lastTime) / drawInterval;
             timer += (currentTime - lastTime);
@@ -85,8 +85,9 @@ public class GamePanel extends JPanel implements Runnable{
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        tileManager.draw(g2);
         GameLevel gameLevel = gameLevelsManager.getCurrentLevel();
+        tileManager.setMap(gameLevelsManager.getCurrentLevel().getMap());
+        tileManager.draw(g2);
         for(Door door : gameLevel.getDoors()) {
             door.draw(g2);
         }

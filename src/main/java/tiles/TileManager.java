@@ -17,6 +17,7 @@ public class TileManager {
     private final Tile[] backgroundsWallsArray;
     private final Tile[] decorationsArray;
     private Tile backgroundTile;
+    private String map;
 
     public TileManager(GamePanel gamePanel){
         this.gamePanel = gamePanel;
@@ -29,6 +30,7 @@ public class TileManager {
         decorationsArray = new Tile[4];
 
         loadSprites();
+        map = "map1";
         createMap();
     }
 
@@ -80,7 +82,7 @@ public class TileManager {
     private void createMap(){
         try {
             ClassLoader classLoader = getClass().getClassLoader();
-            InputStream inputStream = classLoader.getResourceAsStream("maps/map1/map1.txt");
+            InputStream inputStream = classLoader.getResourceAsStream("maps/map1/" + map + ".txt");
             InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
             BufferedReader reader = new BufferedReader(streamReader);
 
@@ -128,7 +130,7 @@ public class TileManager {
             }
             reader.close();
 
-            inputStream = classLoader.getResourceAsStream("maps/map1/decorations_map1.txt");
+            inputStream = classLoader.getResourceAsStream("maps/map1/decorations_" + map + ".txt");
             streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
             reader = new BufferedReader(streamReader);
 
@@ -179,5 +181,12 @@ public class TileManager {
 
     public Tile[][] getDecorationsTilesArray() {
         return decorationsTilesArray;
+    }
+
+    public void setMap(String map){
+        if(!this.map.equals(map)) {
+            this.map = map;
+            createMap();
+        }
     }
 }

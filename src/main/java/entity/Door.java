@@ -87,4 +87,8 @@ public class Door extends Entity{
         //g2d.setColor(Color.RED);
         //g2d.fillRect((int) this.hitbox.getLeftWallLine().getX1(), (int) this.hitbox.getLeftWallLine().getY1(), (int) (this.hitbox.getUpperWallLine().getX2() - this.hitbox.getUpperWallLine().getX1()),  (int) (this.hitbox.getRightWallLine().getY2() - this.hitbox.getLeftWallLine().getY1()));
     }
+
+    public boolean isClosed(){
+        return closed;
+    }
 }
