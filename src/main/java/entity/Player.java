@@ -23,8 +23,6 @@ public class Player extends Entity{
         loadImagesManager = new LoadImagesManager("player");
         this.height = gamePanel.getTileSize();
         this.width = gamePanel.getTileSize();
-        this.positionX = 348;
-        this.positionY = 200;
         this.padding = 7;
 
         updateHitBox();
@@ -136,9 +134,9 @@ public class Player extends Entity{
             } else if (tileManager.getTilesArray()[colIndex2][rowIndex2].isCollisional()) {
                 checkForCeiling(hitbox.getUpperWallLine().getX2(), hitbox.getUpperWallLine().getY2(), deltaTime, tileManager.getTilesArray(), colIndex2, rowIndex2, "right");
             } else {
-                if (tileManager.getDecorationsTilesArray()[colIndex][rowIndex] != null) {
+                if (tileManager.getDecorationsTilesArray()[colIndex][rowIndex] != null && tileManager.getDecorationsTilesArray()[colIndex][rowIndex].isCollisional()) {
                     checkForCeiling(hitbox.getUpperWallLine().getX1(), hitbox.getUpperWallLine().getY1(), deltaTime, tileManager.getDecorationsTilesArray(), colIndex, rowIndex, "left");
-                } else if (tileManager.getDecorationsTilesArray()[colIndex2][rowIndex2] != null) {
+                } else if (tileManager.getDecorationsTilesArray()[colIndex2][rowIndex2] != null && tileManager.getDecorationsTilesArray()[colIndex2][rowIndex2].isCollisional()) {
                     checkForCeiling(hitbox.getUpperWallLine().getX2(), hitbox.getUpperWallLine().getY2(), deltaTime, tileManager.getDecorationsTilesArray(), colIndex2, rowIndex2, "right");
                 }
             }

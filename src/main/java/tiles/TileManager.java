@@ -27,7 +27,7 @@ public class TileManager {
         wallsArray = new Tile[8];
         wallsCornersArray = new Tile[4];
         backgroundsWallsArray = new Tile[17];
-        decorationsArray = new Tile[4];
+        decorationsArray = new Tile[16];
 
         loadSprites();
         map = "map1";
@@ -68,12 +68,24 @@ public class TileManager {
     private void loadDecorationsSprites(){
         try{
             Tile tile;
-            for(int i = 1; i <= decorationsArray.length - 1; i++){
+            for(int i = 1; i <= 3; i++){
                 tile = new Tile(ImageIO.read(getClass().getResourceAsStream("/tiles/decorations/platform" + i + ".png")), gamePanel, true, "PLATFORM " + i, 15, gamePanel.getTileSize());
                 decorationsArray[i - 1] = tile;
             }
             tile = new Tile(ImageIO.read(getClass().getResourceAsStream("/tiles/decorations/platform4.png")), gamePanel, true, "PLATFORM4", 14, gamePanel.getTileSize());
             decorationsArray[3] = tile;
+            for(int i = 1; i <= 4; i++){
+                tile = new Tile(ImageIO.read(getClass().getResourceAsStream("/tiles/decorations/banner" + i + ".png")), gamePanel, false, "BANNER " + i, 32, gamePanel.getTileSize());
+                decorationsArray[i + 3] = tile;
+            }
+            for(int i = 1; i <= 4; i++){
+                tile = new Tile(ImageIO.read(getClass().getResourceAsStream("/tiles/decorations/window1_" + i + ".png")), gamePanel, false, "WINDOW1_ " + i, 32, gamePanel.getTileSize());
+                decorationsArray[i + 7] = tile;
+            }
+            for(int i = 1; i <= 4; i++){
+                tile = new Tile(ImageIO.read(getClass().getResourceAsStream("/tiles/decorations/window2_" + i + ".png")), gamePanel, false, "WINDOW2_ " + i, 32, gamePanel.getTileSize());
+                decorationsArray[i + 11] = tile;
+            }
         }catch(IOException e){
             e.printStackTrace();
         }
@@ -81,8 +93,9 @@ public class TileManager {
 
     private void createMap(){
         try {
+            System.out.println(map);
             ClassLoader classLoader = getClass().getClassLoader();
-            InputStream inputStream = classLoader.getResourceAsStream("maps/map1/" + map + ".txt");
+            InputStream inputStream = classLoader.getResourceAsStream("maps/" + map + "/" + map + ".txt");
             InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
             BufferedReader reader = new BufferedReader(streamReader);
 
@@ -134,7 +147,7 @@ public class TileManager {
             }
             reader.close();
 
-            inputStream = classLoader.getResourceAsStream("maps/map1/decorations_" + map + ".txt");
+            inputStream = classLoader.getResourceAsStream("maps/" + map + "/decorations_" + map + ".txt");
             streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
             reader = new BufferedReader(streamReader);
 
@@ -142,6 +155,7 @@ public class TileManager {
 
             line = reader.readLine();
             while (line != null) {
+                System.out.println(line);
                 String[] words = line.split("\\s+");
                 int i = 0;
                 for(int col = 0; col < gamePanel.getMaxColNum(); col++){
@@ -150,11 +164,25 @@ public class TileManager {
                         case "P2" -> decorationsArray[1].copy();
                         case "P3" -> decorationsArray[2].copy();
                         case "P4" -> decorationsArray[3].copy();
+                        case "BN1" -> decorationsArray[4].copy();
+                        case "BN2" -> decorationsArray[5].copy();
+                        case "BN3" -> decorationsArray[6].copy();
+                        case "BN4" -> decorationsArray[7].copy();
+                        case "WN1_1" -> decorationsArray[8].copy();
+                        case "WN1_2" -> decorationsArray[9].copy();
+                        case "WN1_3" -> decorationsArray[10].copy();
+                        case "WN1_4" -> decorationsArray[11].copy();
+                        case "WN2_1" -> decorationsArray[12].copy();
+                        case "WN2_2" -> decorationsArray[13].copy();
+                        case "WN2_3" -> decorationsArray[14].copy();
+                        case "WN2_4" -> decorationsArray[15].copy();
                         default -> null;
                     };
                     if(tile != null) {
                         tile.setPosition(col * gamePanel.getTileSize(), row * gamePanel.getTileSize());
                         decorationsTilesArray[col][row] = tile;
+                    }else{
+                        decorationsTilesArray[col][row] = null;
                     }
                     i++;
                 }
