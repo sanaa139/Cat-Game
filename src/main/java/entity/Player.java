@@ -16,7 +16,7 @@ public class Player extends Entity{
     LoadImagesManager loadImagesManager;
     private int counter;
 
-    public Player(GamePanel gamePanel, KeyHandler keyHandler, TileManager tileManager){
+    public Player(GamePanel gamePanel, KeyHandler keyHandler, TileManager tileManager, double x, double y){
         super(gamePanel, tileManager);
         this.gamePanel = gamePanel;
         this.keyHandler = keyHandler;
@@ -24,6 +24,8 @@ public class Player extends Entity{
         this.height = gamePanel.getTileSize();
         this.width = gamePanel.getTileSize();
         this.padding = 7;
+        this.positionX = x;
+        this.positionY = y;
 
         updateHitBox();
 

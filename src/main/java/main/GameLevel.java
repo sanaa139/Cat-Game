@@ -2,17 +2,20 @@ package main;
 
 import entity.Ball;
 import entity.Door;
+import entity.Player;
 import tiles.TileManager;
 
 public class GameLevel {
     private final Ball[] balls;
     private final Door[] doors;
     private String map;
+    private Player player;
 
-    public GameLevel(Ball[] balls, Door[] doors, String map){
+    public GameLevel(Ball[] balls, Door[] doors, String map, Player player){
         this.balls = balls;
         this.doors = doors;
         this.map = map;
+        this.player = player;
     }
 
     public Ball[] getBalls(){
@@ -25,5 +28,8 @@ public class GameLevel {
 
     public String getMap(){
         return map;
+    }
+    public Player getPlayer(){
+        return player;
     }
 }

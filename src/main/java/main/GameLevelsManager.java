@@ -10,21 +10,22 @@ import java.lang.reflect.Method;
 public class GameLevelsManager {
     private GamePanel gamePanel;
     private TileManager tileManager;
-    private Player player;
     private GameLevel currentLevel;
-    private int currentLevelNum;
+    public int currentLevelNum;
 
-    public GameLevelsManager(GamePanel gamePanel, TileManager tileManager, Player player){
+    public GameLevelsManager(GamePanel gamePanel, TileManager tileManager){
         this.gamePanel = gamePanel;
         this.tileManager = tileManager;
-        this.player = player;
 
-        currentLevel = createMap1();
-        currentLevelNum = 1;
+        currentLevel = null;
+        currentLevelNum = 0;
     }
 
     private void getNextLevel() {
         switch (currentLevelNum) {
+            case 0:
+                currentLevel = createMap1();
+                break;
             case 1:
                 currentLevel = createMap2();
                 break;
@@ -37,13 +38,17 @@ public class GameLevelsManager {
 
     private boolean checkIfLevelWasCleared(GameLevel gameLevel){
         boolean levelCleared = true;
-        for(Door door : gameLevel.getDoors()){
-            if(!door.isClosed()){
-                levelCleared = false;
-                break;
+        if(gameLevel == null){
+            return levelCleared;
+        }else{
+            for(Door door : gameLevel.getDoors()){
+                if(!door.isClosed()){
+                    levelCleared = false;
+                    break;
+                }
             }
+            return levelCleared;
         }
-        return levelCleared;
     }
 
     public GameLevel getCurrentLevel(){
@@ -54,6 +59,7 @@ public class GameLevelsManager {
     }
 
     private GameLevel createMap1(){
+        Player player = new Player(gamePanel, gamePanel.keyHandler, tileManager, 348, 200);
         Ball ball1 = new Ball(gamePanel, tileManager, player, 330, 270);
         Ball ball2 = new Ball(gamePanel, tileManager, player, 560, 206);
         Ball[] balls = {ball1, ball2};
@@ -62,13 +68,11 @@ public class GameLevelsManager {
         Door door2 = new Door(gamePanel, tileManager, balls, 400, 232);
         Door[] doors = {door1, door2};
 
-        player.setPositionX(348);
-        player.setPositionY(200);
-
-        return new GameLevel(balls, doors, "map1");
+        return new GameLevel(balls, doors, "map1", player);
     }
 
     private GameLevel createMap2(){
+        Player player =  new Player(gamePanel, gamePanel.keyHandler, tileManager, 288, 128);
         Ball ball1 = new Ball(gamePanel, tileManager, player, 224, 142);
         Ball ball2 = new Ball(gamePanel, tileManager, player, 580, 334);
         Ball ball3 = new Ball(gamePanel, tileManager, player, 672, 174);
@@ -78,13 +82,11 @@ public class GameLevelsManager {
         Door door2 = new Door(gamePanel, tileManager, balls, 786, 136);
         Door[] doors = {door1, door2};
 
-        player.setPositionX(288);
-        player.setPositionY(128);
-
-        return new GameLevel(balls, doors, "map2");
+        return new GameLevel(balls, doors, "map2", player);
     }
 
     private GameLevel createMap3(){
+        Player player = new Player(gamePanel, gamePanel.keyHandler, tileManager, 100, 100);
         Ball ball1 = new Ball(gamePanel, tileManager, player, 224, 142);
         Ball ball2 = new Ball(gamePanel, tileManager, player, 580, 334);
         Ball[] balls = {ball1, ball2};
@@ -93,7 +95,9 @@ public class GameLevelsManager {
         Door door2 = new Door(gamePanel, tileManager, balls, 786, 136);
         Door[] doors = {door1, door2};
 
-        return new GameLevel(balls, doors, "map2");
+        return new GameLevel(balls, doors, "map2", player);
     }
+
+
 
 }
