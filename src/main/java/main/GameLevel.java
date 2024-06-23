@@ -3,7 +3,6 @@ package main;
 import entity.Ball;
 import entity.Door;
 import entity.Player;
-import tiles.TileManager;
 
 public class GameLevel {
     private final Ball[] balls;

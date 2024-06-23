@@ -1,15 +1,15 @@
 package main;
 
 import tiles.Tile;
-import tiles.TileManager;
+import tiles.TileManagerMenu;
 
 public class Menu {
     public Button[] buttons;
     private String mapName;
     private Tile[][] map;
-    private TileManager tileManager;
-    public Menu(TileManager tileManager, Button... buttons){
-        this.tileManager = tileManager;
+    private TileManagerMenu tileManagerMenu;
+    public Menu(TileManagerMenu tileManagerMenu, Button... buttons){
+        this.tileManagerMenu = tileManagerMenu;
         this.buttons = new Button[buttons.length];
         for(int i = 0; i < buttons.length; i++){
             this.buttons[i] = buttons[i];

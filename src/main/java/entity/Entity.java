@@ -2,11 +2,9 @@ package entity;
 
 import main.GamePanel;
 import tiles.Tile;
-import tiles.TileManager;
-import tiles.Vector;
+import tiles.TileManagerGame;
 
 import java.awt.*;
-import java.sql.SQLOutput;
 
 public class Entity {
     protected double positionX, positionY, velocityX, velocityY;
@@ -16,12 +14,12 @@ public class Entity {
     protected String direction;
 
     protected GamePanel gamePanel;
-    protected TileManager tileManager;
+    protected TileManagerGame tileManager;
 
     protected HitBox hitbox;
     protected int padding;
 
-    Entity(GamePanel gamePanel, TileManager tileManager){
+    Entity(GamePanel gamePanel, TileManagerGame tileManager){
         this.gamePanel = gamePanel;
         this.tileManager = tileManager;
         this.hitbox = new HitBox();

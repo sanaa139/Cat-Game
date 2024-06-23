@@ -7,20 +7,19 @@ import java.awt.event.MouseListener;
 import java.awt.geom.Arc2D;
 
 public class Button extends JPanel{
-    private Shape shape;
-    public Button(int x, int y) {
-        shape = new Rectangle(x, y, 50, 50);
+    private Image image;
+    private int x, y, width, height;
+    public Button(Image image, int x, int y, int width, int height) {
+        this.image = image;
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
     }
 
-    protected void draw(Graphics g) {
-        super.paintComponent(g);
-        Graphics2D g2 = (Graphics2D) g;
+    public void draw(Graphics2D g2d) {
+        super.paintComponent(g2d);
 
-        g2.setColor(Color.RED);
-        g2.draw(shape);
-    }
-
-    public Shape getShape(){
-        return shape;
+        g2d.drawImage(image, x, y, width, height, null);
     }
 }

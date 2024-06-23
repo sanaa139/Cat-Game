@@ -3,17 +3,15 @@ package main;
 import entity.Ball;
 import entity.Door;
 import entity.Player;
-import tiles.TileManager;
-
-import java.lang.reflect.Method;
+import tiles.TileManagerGame;
 
 public class GameLevelsManager {
     private GamePanel gamePanel;
-    private TileManager tileManager;
+    private TileManagerGame tileManager;
     private GameLevel currentLevel;
     public int currentLevelNum;
 
-    public GameLevelsManager(GamePanel gamePanel, TileManager tileManager){
+    public GameLevelsManager(GamePanel gamePanel, TileManagerGame tileManager){
         this.gamePanel = gamePanel;
         this.tileManager = tileManager;
 

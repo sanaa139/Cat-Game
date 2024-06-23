@@ -3,12 +3,10 @@ package entity;
 import main.GamePanel;
 import main.KeyHandler;
 import tiles.Tile;
-import tiles.TileManager;
+import tiles.TileManagerGame;
 import tiles.Vector;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.io.IOException;
 
 public class Player extends Entity{
     GamePanel gamePanel;
@@ -16,7 +14,7 @@ public class Player extends Entity{
     LoadImagesManager loadImagesManager;
     private int counter;
 
-    public Player(GamePanel gamePanel, KeyHandler keyHandler, TileManager tileManager, double x, double y){
+    public Player(GamePanel gamePanel, KeyHandler keyHandler, TileManagerGame tileManager, double x, double y){
         super(gamePanel, tileManager);
         this.gamePanel = gamePanel;
         this.keyHandler = keyHandler;

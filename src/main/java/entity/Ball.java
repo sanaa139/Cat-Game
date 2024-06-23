@@ -2,13 +2,12 @@ package entity;
 
 import main.GamePanel;
 import tiles.Tile;
-import tiles.TileManager;
+import tiles.TileManagerGame;
 import tiles.Vector;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.IOException;
-import java.util.Objects;
 
 public class Ball extends Entity {
     Player player;
@@ -19,7 +18,7 @@ public class Ball extends Entity {
     private int currentMOvement;
     private int maximumMovement = 40;
 
-    public Ball(GamePanel gamePanel, TileManager tileManager, Player player, double positionX, double positionY) {
+    public Ball(GamePanel gamePanel, TileManagerGame tileManager, Player player, double positionX, double positionY) {
         super(gamePanel, tileManager);
         try {
             image = ImageIO.read(getClass().getResourceAsStream("/ball.png"));

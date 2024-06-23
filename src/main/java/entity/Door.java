@@ -1,7 +1,7 @@
 package entity;
 
 import main.GamePanel;
-import tiles.TileManager;
+import tiles.TileManagerGame;
 import tiles.Vector;
 
 import javax.imageio.ImageIO;
@@ -13,7 +13,7 @@ public class Door extends Entity{
     private Ball[] ballsArray;
     private int counter;
     private boolean closed;
-    public Door(GamePanel gamePanel, TileManager tileManager, Ball[] ballsArray, double positionX, double positionY){
+    public Door(GamePanel gamePanel, TileManagerGame tileManager, Ball[] ballsArray, double positionX, double positionY){
         super(gamePanel, tileManager);
         this.ballsArray = ballsArray;
         try {

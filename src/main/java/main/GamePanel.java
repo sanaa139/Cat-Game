@@ -2,15 +2,14 @@ package main;
 
 import entity.Ball;
 import entity.Door;
-import entity.Player;
-import org.w3c.dom.ls.LSOutput;
 import tiles.TileManager;
+import tiles.TileManagerGame;
+import tiles.TileManagerMenu;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.sql.SQLOutput;
 
 public class GamePanel extends JPanel implements Runnable, MouseListener{
     private final int originalTileSize = 16;
@@ -22,10 +21,11 @@ public class GamePanel extends JPanel implements Runnable, MouseListener{
     private final int screenHeight = maxRowNum * tileSize;
 
     KeyHandler keyHandler = new KeyHandler();
-    TileManager tileManager = new TileManager(this);
+    TileManagerGame tileManagerGame = new TileManagerGame(this);
+    TileManagerMenu tileManagerMenu = new TileManagerMenu(this);
     Menu menu;
     private boolean inMenu;
-    GameLevelsManager gameLevelsManager = new GameLevelsManager(this, tileManager);
+    GameLevelsManager gameLevelsManager = new GameLevelsManager(this, tileManagerGame);
 
     public GamePanel(){
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -41,11 +41,6 @@ public class GamePanel extends JPanel implements Runnable, MouseListener{
     }
 
     private void createMenu(){
-        Button newGameButton = new Button(5, 5);
-        Button loadGameButton = new Button(5, 100);
-        newGameButton.addMouseListener(this);
-        loadGameButton.addMouseListener(this);
-        menu = new Menu(tileManager, newGameButton, loadGameButton);
         inMenu = true;
     }
 
@@ -107,23 +102,22 @@ public class GamePanel extends JPanel implements Runnable, MouseListener{
 
     public void paintComponent(Graphics g){
         super.paintComponent(g);
-        Graphics2D g2 = (Graphics2D) g;
+        Graphics2D g2d = (Graphics2D) g;
         if(!inMenu) {
             GameLevel gameLevel = gameLevelsManager.getCurrentLevel();
-            tileManager.setMap(gameLevelsManager.getCurrentLevel().getMap());
-            tileManager.draw(g2);
+            tileManagerGame.setMap(gameLevelsManager.getCurrentLevel().getMap());
+            tileManagerGame.draw(g2d);
             for (Door door : gameLevel.getDoors()) {
-                door.draw(g2);
+                door.draw(g2d);
             }
-            gameLevelsManager.getCurrentLevel().getPlayer().draw(g2);
+            gameLevelsManager.getCurrentLevel().getPlayer().draw(g2d);
             for (Ball ball : gameLevel.getBalls()) {
-                ball.draw(g2);
+                ball.draw(g2d);
             }
         }else {
-            tileManager.setMap("menu");
-            tileManager.draw(g2);
+            tileManagerMenu.draw(g2d);
         }
-        g2.dispose();
+        g2d.dispose();
     }
 
     public int getTileSize(){
@@ -144,12 +138,11 @@ public class GamePanel extends JPanel implements Runnable, MouseListener{
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        System.out.println("klineloooo");
-        //for(Button button : buttons){
-       //     if(button.getShape().contains(e.getPoint())){
-        //        System.out.println("MYSZKA KLIKNELAAAAAAAA");
-        //    }
-        //}
+        for(Button button : tileManagerMenu.getButtons()){
+            if(button.getBounds().contains(e.getPoint())){
+                System.out.println("MYSZKA KLIKNELAAAAAAAA");
+            }
+        }
     }
 
     @Override
