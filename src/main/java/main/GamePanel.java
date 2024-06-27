@@ -10,29 +10,31 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.SQLOutput;
 
-public class GamePanel extends JPanel implements Runnable, MouseListener{
-    private final int originalTileSize = 16;
-    private int scale = 2;
-    private final int tileSize = originalTileSize * scale;
-    private final int maxColNum = 32;
-    private final int maxRowNum = 16;
-    private final int screenWidth = maxColNum * tileSize;
-    private final int screenHeight = maxRowNum * tileSize;
+public class GamePanel extends JPanel implements Runnable{
+    public enum GameState {
+        MENU, GAME, END,
+    }
+    private GameState state = GameState.MENU;
+    private static final int ORIGINAL_TILE_SIZE = 16;
+    private static final int SCALE = 2;
+    private static final int TILE_SIZE = ORIGINAL_TILE_SIZE * SCALE;
+    private static final int MAX_COL_NUM = 32;
+    private static final int MAX_ROW_NUM = 16;
+    private static final int SCREEN_WIDTH = MAX_COL_NUM * TILE_SIZE;
+    private static final int SCREEN_HEIGHT = MAX_ROW_NUM * TILE_SIZE;
 
     KeyHandler keyHandler = new KeyHandler();
     TileManagerGame tileManagerGame = new TileManagerGame(this);
-    TileManagerMenu tileManagerMenu = new TileManagerMenu(this);
-    Menu menu;
-    private boolean inMenu;
+    Menu menu = new Menu(this);
     GameLevelsManager gameLevelsManager = new GameLevelsManager(this, tileManagerGame);
 
     public GamePanel(){
-        this.setPreferredSize(new Dimension(screenWidth, screenHeight));
+        this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
+        this.setLayout(null);
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
-        addMouseListener(this);
-        createMenu();
 
         gameThread = new Thread(this);
         gameThread.start();
@@ -40,15 +42,12 @@ public class GamePanel extends JPanel implements Runnable, MouseListener{
         System.out.println(gameLevelsManager.currentLevelNum);
     }
 
-    private void createMenu(){
-        inMenu = true;
-    }
-
     Thread gameThread;
     public int FPS = 60;
 
     @Override
     public void run() {
+
         double drawInterval = 1000000000 / FPS;
         double delta = 0;
         long lastTime = System.nanoTime();
@@ -59,22 +58,30 @@ public class GamePanel extends JPanel implements Runnable, MouseListener{
 
 
         while(gameThread != null){
-            GameLevel gameLevel = null;
-            if(gameLevelsManager.currentLevelNum != 0){
-                gameLevel = gameLevelsManager.getCurrentLevel();
-            }
-            currentTime = System.nanoTime();
-            delta += (currentTime - lastTime) / drawInterval;
-            timer += (currentTime - lastTime);
-            lastTime = currentTime;
+            switch(state){
+                case MENU:
+                    System.out.println("MENU");
+                    break;
+                case GAME:
+                    //System.out.println("GAMEEEE");
+                    GameLevel gameLevel = null;
+                    if(gameLevelsManager.currentLevelNum != 0){
+                        gameLevel = gameLevelsManager.getCurrentLevel();
+                    }
+                    currentTime = System.nanoTime();
+                    delta += (currentTime - lastTime) / drawInterval;
+                    timer += (currentTime - lastTime);
+                    lastTime = currentTime;
 
-            if(delta >= 1){
-                if(gameLevel != null) {
-                    update(delta, gameLevel.getBalls(), gameLevel.getDoors());
-                }
-                repaint();
-                delta--;
-                drawCount++;
+                    if(delta >= 1){
+                        if(gameLevel != null) {
+                            update(delta, gameLevel.getBalls(), gameLevel.getDoors());
+                        }
+                        repaint();
+                        delta--;
+                        drawCount++;
+                    }
+                    break;
             }
 
             if(timer >= 1000000000){
@@ -87,9 +94,6 @@ public class GamePanel extends JPanel implements Runnable, MouseListener{
 
     public void update(double deltaTime, Ball[] balls, Door[] doors){
         if(gameLevelsManager.getCurrentLevel() != null){
-            System.out.println("current lvl not null");
-            System.out.println(gameLevelsManager.currentLevelNum);
-            System.out.println(inMenu);
             gameLevelsManager.getCurrentLevel().getPlayer().update(deltaTime);
         }
         for(Ball ball : balls){
@@ -100,68 +104,56 @@ public class GamePanel extends JPanel implements Runnable, MouseListener{
         }
     }
 
+
     public void paintComponent(Graphics g){
+        System.out.println("paint");
         super.paintComponent(g);
+
         Graphics2D g2d = (Graphics2D) g;
-        if(!inMenu) {
-            GameLevel gameLevel = gameLevelsManager.getCurrentLevel();
-            tileManagerGame.setMap(gameLevelsManager.getCurrentLevel().getMap());
-            tileManagerGame.draw(g2d);
-            for (Door door : gameLevel.getDoors()) {
-                door.draw(g2d);
-            }
-            gameLevelsManager.getCurrentLevel().getPlayer().draw(g2d);
-            for (Ball ball : gameLevel.getBalls()) {
-                ball.draw(g2d);
-            }
-        }else {
-            tileManagerMenu.draw(g2d);
+
+        switch(state){
+            case MENU:
+                menu.getTileManagerMenu().draw(g2d);
+                break;
+            case GAME:
+                GameLevel gameLevel = gameLevelsManager.getCurrentLevel();
+                tileManagerGame.setMap(gameLevelsManager.getCurrentLevel().getMap());
+                tileManagerGame.draw(g2d);
+                for (Door door : gameLevel.getDoors()) {
+                    door.draw(g2d);
+                }
+                gameLevelsManager.getCurrentLevel().getPlayer().draw(g2d);
+                for (Ball ball : gameLevel.getBalls()) {
+                    ball.draw(g2d);
+                }
+                break;
         }
-        g2d.dispose();
     }
 
     public int getTileSize(){
-        return tileSize;
+        return TILE_SIZE;
     }
 
     public int getMaxColNum(){
-        return maxColNum;
+        return MAX_COL_NUM;
     }
 
     public int getMaxRowNum(){
-        return maxRowNum;
+        return MAX_ROW_NUM;
     }
 
     public int getScale(){
-        return scale;
+        return SCALE;
+    }
+    public int getScreenWidth(){
+        return SCREEN_WIDTH;
+    }
+    public int getScreenHeight(){
+        return SCREEN_HEIGHT;
     }
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        for(Button button : tileManagerMenu.getButtons()){
-            if(button.getBounds().contains(e.getPoint())){
-                System.out.println("MYSZKA KLIKNELAAAAAAAA");
-            }
-        }
+    public void setState(GameState state){
+        this.state = state;
     }
 
-    @Override
-    public void mousePressed(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-
-    }
 }

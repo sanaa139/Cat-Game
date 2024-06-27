@@ -14,25 +14,20 @@ import java.nio.charset.StandardCharsets;
 public class TileManagerMenu implements TileManager{
     private GamePanel gamePanel;
     private Tile backgroundMenuTile;
-    private Button playButton;
     private Tile[][] menuTilesArray;
     private String mapName;
-    private Button[] buttons;
     public TileManagerMenu(GamePanel gamePanel){
         this.gamePanel = gamePanel;
         this.mapName = "menu";
 
         menuTilesArray = new Tile[gamePanel.getMaxColNum()][gamePanel.getMaxRowNum()];
-        buttons = new Button[1];
         initializeTiles();
         createMap();
     }
 
     private void initializeTiles(){
         try{
-            backgroundMenuTile = new Tile(ImageIO.read(getClass().getResourceAsStream("/tiles/background/backgroundMenu.jpg")), gamePanel, false,"BLUE_BACKGROUND");
-            playButton = new Button(ImageIO.read(getClass().getResourceAsStream("/tiles/background/playButton.jpg")), 400, 250,100, 30);
-            buttons[0] = playButton;
+            backgroundMenuTile = new Tile(ImageIO.read(getClass().getResourceAsStream("/tiles/background/background.jpg")), gamePanel, false,"BLUE_BACKGROUND");
         }catch(IOException e){
             e.printStackTrace();
         }
@@ -80,10 +75,6 @@ public class TileManagerMenu implements TileManager{
                 }
             }
         }
-        playButton.draw(g2d);
     }
 
-    public Button[] getButtons(){
-        return buttons;
-    }
 }
