@@ -19,12 +19,12 @@ public class GameLevelsManager {
         currentLevelNum = 0;
     }
 
-    private void getNextLevel() {
+    private void loadNextLevel() {
         currentLevelNum++;
         switch (currentLevelNum) {
             case 1:
                 System.out.println("created map1");
-                currentLevel = createMap2();
+                currentLevel = createMap1();
                 break;
             case 2:
                 System.out.println("created map2");
@@ -37,36 +37,32 @@ public class GameLevelsManager {
         }
     }
 
-    private boolean checkIfLevelWasCleared(GameLevel gameLevel){
+    public void checkIfLevelWasCleared(){
+        System.out.println("checking if level was cleared");
         boolean levelCleared = true;
-        if(gameLevel == null){
-            System.out.println("game level null");
-            return levelCleared;
-        }else{
-            for(Door door : gameLevel.getDoors()){
+        if (currentLevel != null) {
+            for(Door door : currentLevel.getDoors()){
                 if(!door.isClosed()){
+                    System.out.println("is door closed: " + door.isClosed());
                     levelCleared = false;
                     break;
                 }
             }
-            return levelCleared;
+        }
+
+        if(levelCleared || currentLevel == null){
+            System.out.println("level was cleared");
+            loadNextLevel();
         }
     }
 
-    public GameLevel getCurrentOrNextLevel(){
-        if(checkIfLevelWasCleared(currentLevel)){
-            System.out.println("lvl num: " + currentLevelNum + ", lvl cleared true");
-            getNextLevel();
-        }
-        return currentLevel;
-    }
 
     public GameLevel getCurrentLevel(){
         return currentLevel;
     }
 
     private GameLevel createMap1(){
-        Player player = new Player(gamePanel, gamePanel.keyHandler, tileManager, 348, 200);
+        Player player = new Player(gamePanel, gamePanel.keyHandler, tileManager, 348, 256);
         Ball ball1 = new Ball(gamePanel, tileManager, player, 330, 270);
         Ball ball2 = new Ball(gamePanel, tileManager, player, 560, 206);
         Ball[] balls = {ball1, ball2};

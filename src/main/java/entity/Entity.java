@@ -206,7 +206,6 @@ public class Entity {
             }else if(decorationTile2 != null && decorationTile2.isCollisional()){
                 fallOnTheGround(hitbox.getLowerWallLine().getX2(), hitbox.getLowerWallLine().getY2(), colIndex2, rowIndex2, deltaTime, tileManager.getDecorationsTilesArray());
             }
-
         }else {
             int colIndex = (int) (hitbox.getUpperWallLine().getX1() / gamePanel.getTileSize());
             int rowIndex = (int) ((hitbox.getLowerWallLine().getY1() + velocityY) / gamePanel.getTileSize());
@@ -236,9 +235,7 @@ public class Entity {
     }
 
     private void fallOnTheGround(double x1, double y1, int colIndex, int rowIndex, double deltaTime, Tile[][] arr){
-        /*double x1 = hitbox.getLowerWallLine().getX1();
-        double y1 = hitbox.getLowerWallLine().getY1();*/
-        double x2 = x1;//+ (deltaTime * velocityX);
+        double x2 = x1;
         double y2 = y1 + (deltaTime * velocityY);
         double x3 = arr[colIndex][rowIndex].getUpperWallLine().getX1();
         double y3 = arr[colIndex][rowIndex].getUpperWallLine().getY1();
@@ -247,38 +244,17 @@ public class Entity {
 
         double divider = (x4 - x3) * (y2 - y1) - (y4 - y3) * (x2 - x1);
 
-        if(divider != 0){
+        if(divider != 0) {
             double alpha = ((x4 - x3) * (y3 - y1) - (y4 - y3) * (x3 - x1)) / divider;
             double beta = ((x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1)) / divider;
-            if(alpha >= 0 && alpha <= 1 && beta >= 0 && beta <= 1) {
+            if (alpha >= 0 && alpha <= 1 && beta >= 0 && beta <= 1) {
                 positionX = x1 + alpha * (x2 - x1) - padding;
                 positionY = y1 + alpha * (y2 - y1) - height;
 
                 velocityX = 0;
                 velocityY = 0;
             }
-        }/*else {
-            x1 = hitbox.getLowerWallLine().getX2();
-            y1 = hitbox.getLowerWallLine().getY2();
-            x2 = x1 + (deltaTime * velocityX);
-            y2 = y1 + (deltaTime * velocityY);
-
-            divider = (x4 - x3) * (y2 - y1) - (y4 - y3) * (x2 - x1);
-
-            if(divider != 0){
-                double alpha = ((x4 - x3) * (y3 - y1) - (y4 - y3) * (x3 - x1)) / divider;
-                double beta = ((x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1)) / divider;
-                if(alpha >= 0 && alpha <= 1 && beta >= 0 && beta <= 1) {
-                    positionX = x1 + alpha * (x2 - x1) + 1 - padding - width;
-                    positionY = y1 + alpha * (y2 - y1) - height;
-
-                    velocityX = 0;
-                    velocityY = 0;
-                }
-            }
-        }*/
-
-
+        }
     }
 
     public void setVelocityX(double velocityX){

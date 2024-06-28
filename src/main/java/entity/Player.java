@@ -54,7 +54,7 @@ public class Player extends Entity{
         if(keyHandler.upPressed){
             this.jump();
         }
-        //this.checkForCeilingCollision(deltaTime);
+        this.checkForCeilingCollision(deltaTime);
         this.applyGravity(deltaTime);
         counter++;
         updateHitBox();

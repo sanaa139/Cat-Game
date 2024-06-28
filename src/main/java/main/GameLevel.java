@@ -33,6 +33,6 @@ public class GameLevel {
     }
     @Override
     public String toString(){
-        return "GAMELEVEL: map: " + map + ", players coordinates: " + player.getPositionX() + ", " + player.getPositionY();
+        return "GAMELEVEL: map: " + map + ", players coordinates: " + player.getPositionX() + ", " + player.getPositionY() + ", doors " + getDoors().length + ", baals: " + getBalls().length;
     }
 }
