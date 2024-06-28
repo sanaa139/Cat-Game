@@ -26,7 +26,7 @@ public class TileManagerGame implements TileManager{
         wallsArray = new Tile[8];
         wallsCornersArray = new Tile[4];
         backgroundsWallsArray = new Tile[17];
-        decorationsArray = new Tile[16];
+        decorationsArray = new Tile[17];
 
         loadSprites();
         mapName = "map1";
@@ -85,6 +85,8 @@ public class TileManagerGame implements TileManager{
                 tile = new Tile(ImageIO.read(getClass().getResourceAsStream("/tiles/decorations/window2_" + i + ".png")), gamePanel, false, "WINDOW2_ " + i, 32, gamePanel.getTileSize());
                 decorationsArray[i + 11] = tile;
             }
+            tile = new Tile(ImageIO.read(getClass().getResourceAsStream("/tiles/decorations/box.png")), gamePanel, true, "BOX", gamePanel.getTileSize(), gamePanel.getTileSize());
+            decorationsArray[16] = tile;
         }catch(IOException e){
             e.printStackTrace();
         }
@@ -175,6 +177,7 @@ public class TileManagerGame implements TileManager{
                         case "WN2_2" -> decorationsArray[13].copy();
                         case "WN2_3" -> decorationsArray[14].copy();
                         case "WN2_4" -> decorationsArray[15].copy();
+                        case "BOX" -> decorationsArray[16].copy();
                         default -> null;
                     };
                     if (tile != null) {

@@ -82,7 +82,7 @@ public class Player extends Entity{
                     }else if(image.equals(loadImagesManager.getRight2())){
                         image = loadImagesManager.getRight3();
                     }else if(image.equals(loadImagesManager.getRight3())){
-                        image = loadImagesManager.getLeft4();
+                        image = loadImagesManager.getRight4();
                     }else if(image.equals(loadImagesManager.getRight4())){
                         image = loadImagesManager.getRight1();
                     }else{
@@ -93,14 +93,6 @@ public class Player extends Entity{
                     if(image.equals(loadImagesManager.getLeft1()) || image.equals(loadImagesManager.getLeft2()) || image.equals(loadImagesManager.getLeft3()) || image.equals(loadImagesManager.getLeft4())){
                         image = loadImagesManager.getLeftInactive();
                     }else if(image.equals(loadImagesManager.getRight1()) || image.equals(loadImagesManager.getRight2()) || image.equals(loadImagesManager.getRight3()) || image.equals(loadImagesManager.getRight4())){
-                        image = loadImagesManager.getRightInactive();
-                    }else if(image.equals(loadImagesManager.getLeftInactive())){
-                        image = loadImagesManager.getLeftInactive2();
-                    }else if(image.equals(loadImagesManager.getLeftInactive2())){
-                        image = loadImagesManager.getLeftInactive();
-                    }else if(image.equals(loadImagesManager.getRightInactive())){
-                        image = loadImagesManager.getRightInactive2();
-                    }else if(image.equals(loadImagesManager.getRightInactive2())){
                         image = loadImagesManager.getRightInactive();
                     }
                     break;

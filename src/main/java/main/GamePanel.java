@@ -66,9 +66,7 @@ public class GamePanel extends JPanel implements Runnable{
                 case GAME:
                     //System.out.println("GAMEEEE");
                     gameLevelsManager.checkIfLevelWasCleared();
-                    if(!gameLevelsManager.getCurrentLevel().equals(gameLevel)){
-                        gameLevel = gameLevelsManager.getCurrentLevel();
-                    }
+                    gameLevel = gameLevelsManager.getCurrentLevel();
                     System.out.println("current level: " + gameLevel);
                     currentTime = System.nanoTime();
                     delta += (currentTime - lastTime) / drawInterval;

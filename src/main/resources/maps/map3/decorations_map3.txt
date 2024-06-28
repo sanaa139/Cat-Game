@@ -1,0 +1,16 @@
+B B B B B  B   B   B   B   B   B     B     B   B   B    B   B   B   B   B    B   B   B   B   B   B   B   B   B  B B B
+B B B B B  B   B   B   B   B   B     B     B   B   B    B   B   B   B   B    B   B   B   B   B   B   B   B   B  B B B
+B B B B B  B   B   B   B   B   B     B     B   B   B    B   B   B   C1  W7   W7  W7  W7  W7  W7  W7  W7  C2  B  B B B
+B B B B B  B   B   B   B   B   B     B     B   B   B    B   B   B   W5  BW1  BW2 BW2 BW2 BW2 BW2 BW2 BN1 W4  B  B B B
+B B B B C1 W7  W7  W7  W7  W7  W7    W7    W7  W7  W7   W7  W7  W7  W8  BW4  BW5 BW5 BW5 BW5 BW5 BW5 BN2 W4  B  B B B
+B B B B W5 BW1 BW2 BW2 BW2 BW2 WN1_1 WN1_2 BW2 BW2 BW2  BN1 BW2 BW2 BN1 BW13 BW5 P1  P4  P2  BW5 BW5 BN2 BW6 W4 B B B
+B B B B W5 BW4 BW5 BW5 BW5 BW5 WN1_3 WN1_4 BW5 BW5 BW5  BN2 BW5 BW5 BN2 BW5  BW5 BW5 BW5 BW5 P3  BW5 BN3 W4  B  B B B
+B B B B W5 BW4 BW5 BW5 BW5 BW5 P1    P2    BW5 BW5 BW5  BN4 BW5 BW5 BN4 BW5  BW5 BW5 BW5 BW5 BW5 BW5 BW6 W4  B  B B B
+B B B B W5 BW4 BW5 BW5 BW5 BW5 BW5   BW5   P3  BW5 BW10 BW8 BW8 BW8 BW8 BW8  BW8 BW8 BOX BW8 BW8 BW8 BW9 W4  B  B B B
+B B B B W5 BW4 BW5 BW5 BW5 BW5 BW5   BW5   BW5 BW5 BW6  W1  W2  W2  W2  W2   W2  W2  W2  W2  W2  W2  W2  C4  B  B B B
+B B B B W5 BW7 BW8 BW8 BW8 BW8 BW11  BW5   BW5 P3  BW6  W4  B   B   B   B    B   B   B   B   B   B   B   B   B  B B B
+B B B B C3 W2  W2  W2  W2  W3  BW4   BW5   BW5 BW5 BW6  W4  B   B   B   B    B   B   B   B   B   B   B   B   B  B B B
+B B B B B  B   B   B   B   W5  BW7   BW8   BW8 BW8 BW9  W4  B   B   B   B    B   B   B   B   B   B   B   B   B  B B B
+B B B B B  B   B   B   B   C3  W2    W2    W2  W2  W2   C4  B   B   B   B    B   B   B   B   B   B   B   B   B  B B B
+B B B B B  B   B   B   B   B   B     B     B   B   B    B   B   B   B   B    B   B   B   B   B   B   B   B   B  B B B
+B B B B B  B   B   B   B   B   B     B     B   B   B    B   B   B   B   B    B   B   B   B   B   B   B   B   B  B B B

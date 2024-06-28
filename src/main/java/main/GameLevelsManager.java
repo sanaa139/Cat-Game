@@ -15,8 +15,8 @@ public class GameLevelsManager {
         this.gamePanel = gamePanel;
         this.tileManager = tileManager;
 
-        currentLevel = null;
-        currentLevelNum = 0;
+        currentLevel = createMap3();
+        currentLevelNum = 3;
     }
 
     private void loadNextLevel() {
@@ -56,7 +56,6 @@ public class GameLevelsManager {
         }
     }
 
-
     public GameLevel getCurrentLevel(){
         return currentLevel;
     }
@@ -89,18 +88,17 @@ public class GameLevelsManager {
     }
 
     private GameLevel createMap3(){
-        Player player = new Player(gamePanel, gamePanel.keyHandler, tileManager, 100, 100);
-        Ball ball1 = new Ball(gamePanel, tileManager, player, 224, 142);
-        Ball ball2 = new Ball(gamePanel, tileManager, player, 580, 334);
-        Ball[] balls = {ball1, ball2};
+        Player player = new Player(gamePanel, gamePanel.keyHandler, tileManager, 192, 320);
+        Ball ball1 = new Ball(gamePanel, tileManager, player, 430, 398);
+        Ball ball2 = new Ball(gamePanel, tileManager, player, 735, 270);
+        Ball ball3 = new Ball(gamePanel, tileManager, player, 704, 142);
+        Ball ball4 = new Ball(gamePanel, tileManager, player, 325, 206);
+        Ball[] balls = {ball1, ball2, ball3, ball4};
 
-        Door door1 = new Door(gamePanel, tileManager, balls, 256, 264);
-        Door door2 = new Door(gamePanel, tileManager, balls, 786, 136);
+        Door door1 = new Door(gamePanel, tileManager, balls, 520, 232);
+        Door door2 = new Door(gamePanel, tileManager, balls, 192, 296);
         Door[] doors = {door1, door2};
 
         return new GameLevel(balls, doors, "map3", player);
     }
-
-
-
 }
