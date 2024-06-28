@@ -64,19 +64,18 @@ public class GamePanel extends JPanel implements Runnable{
                     break;
                 case GAME:
                     //System.out.println("GAMEEEE");
-                    GameLevel gameLevel = null;
-                    if(gameLevelsManager.currentLevelNum != 0){
-                        gameLevel = gameLevelsManager.getCurrentLevel();
-                    }
+
+                    GameLevel gameLevel = gameLevelsManager.getCurrentOrNextLevel();
+                    System.out.println(gameLevel.toString());
+
+                    System.out.println("game level: " + gameLevelsManager.currentLevelNum);
                     currentTime = System.nanoTime();
                     delta += (currentTime - lastTime) / drawInterval;
                     timer += (currentTime - lastTime);
                     lastTime = currentTime;
 
                     if(delta >= 1){
-                        if(gameLevel != null) {
-                            update(delta, gameLevel.getBalls(), gameLevel.getDoors());
-                        }
+                        update(delta, gameLevel.getBalls(), gameLevel.getDoors());
                         repaint();
                         delta--;
                         drawCount++;
@@ -94,7 +93,9 @@ public class GamePanel extends JPanel implements Runnable{
 
     public void update(double deltaTime, Ball[] balls, Door[] doors){
         if(gameLevelsManager.getCurrentLevel() != null){
+            System.out.println("player update");
             gameLevelsManager.getCurrentLevel().getPlayer().update(deltaTime);
+            System.out.println("end of player update");
         }
         for(Ball ball : balls){
             ball.update(deltaTime);
@@ -116,16 +117,20 @@ public class GamePanel extends JPanel implements Runnable{
                 menu.getTileManagerMenu().draw(g2d);
                 break;
             case GAME:
+                System.out.println("GAME STATE PAINT");
                 GameLevel gameLevel = gameLevelsManager.getCurrentLevel();
                 tileManagerGame.setMap(gameLevelsManager.getCurrentLevel().getMap());
                 tileManagerGame.draw(g2d);
                 for (Door door : gameLevel.getDoors()) {
                     door.draw(g2d);
                 }
+                System.out.println("draw player");
                 gameLevelsManager.getCurrentLevel().getPlayer().draw(g2d);
+                System.out.println("end draw player");
                 for (Ball ball : gameLevel.getBalls()) {
                     ball.draw(g2d);
                 }
+                System.out.println("end of game state");
                 break;
         }
     }

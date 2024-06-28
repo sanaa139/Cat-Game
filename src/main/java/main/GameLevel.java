@@ -31,4 +31,8 @@ public class GameLevel {
     public Player getPlayer(){
         return player;
     }
+    @Override
+    public String toString(){
+        return "GAMELEVEL: map: " + map + ", players coordinates: " + player.getPositionX() + ", " + player.getPositionY();
+    }
 }
