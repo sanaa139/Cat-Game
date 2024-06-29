@@ -96,7 +96,6 @@ public class TileManagerGame implements TileManager{
         try {
             ClassLoader classLoader = getClass().getClassLoader();
             InputStream inputStream = classLoader.getResourceAsStream("maps/" + mapName + "/" + mapName + ".txt");
-            System.out.println(inputStream);
             InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
             BufferedReader reader = new BufferedReader(streamReader);
 

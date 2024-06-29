@@ -14,7 +14,7 @@ import java.sql.SQLOutput;
 
 public class GamePanel extends JPanel implements Runnable{
     public enum GameState {
-        MENU, GAME, END,
+        MENU, GAME
     }
     private GameState state = GameState.MENU;
     private static final int ORIGINAL_TILE_SIZE = 16;
@@ -24,6 +24,7 @@ public class GamePanel extends JPanel implements Runnable{
     private static final int MAX_ROW_NUM = 16;
     private static final int SCREEN_WIDTH = MAX_COL_NUM * TILE_SIZE;
     private static final int SCREEN_HEIGHT = MAX_ROW_NUM * TILE_SIZE;
+
 
     KeyHandler keyHandler = new KeyHandler();
     TileManagerGame tileManagerGame = new TileManagerGame(this);
@@ -56,32 +57,27 @@ public class GamePanel extends JPanel implements Runnable{
         long timer = 0;
         int drawCount = 0;
 
-        GameLevel gameLevel = null;
+        GameLevel gameLevel;
 
         while(gameThread != null){
-            switch(state){
-                case MENU:
-                    System.out.println("MENU");
-                    break;
-                case GAME:
-                    //System.out.println("GAMEEEE");
-                    gameLevelsManager.checkIfLevelWasCleared();
-                    gameLevel = gameLevelsManager.getCurrentLevel();
-                    System.out.println("current level: " + gameLevel);
-                    currentTime = System.nanoTime();
-                    delta += (currentTime - lastTime) / drawInterval;
-                    timer += (currentTime - lastTime);
-                    lastTime = currentTime;
+            //System.out.println("STATE OF THE GAME: " + state);
+            if(state == GameState.GAME){
+                gameLevelsManager.checkIfLevelWasCleared();
+                gameLevel = gameLevelsManager.getCurrentLevel();
+                System.out.println("current level: " + gameLevel);
+                currentTime = System.nanoTime();
+                delta += (currentTime - lastTime) / drawInterval;
+                timer += (currentTime - lastTime);
+                lastTime = currentTime;
 
-                    if(delta >= 1){
-                        if(gameLevel != null) {
-                            update(delta, gameLevel.getBalls(), gameLevel.getDoors());
-                        }
-                        repaint();
-                        delta--;
-                        drawCount++;
+                if(delta >= 1){
+                    if(gameLevel != null) {
+                        update(delta, gameLevel.getBalls(), gameLevel.getDoors());
                     }
-                    break;
+                    repaint();
+                    delta--;
+                    drawCount++;
+                }
             }
 
             if(timer >= 1000000000){
@@ -93,9 +89,7 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     public void update(double deltaTime, Ball[] balls, Door[] doors){
-        if(gameLevelsManager.getCurrentLevel() != null){
-            gameLevelsManager.getCurrentLevel().getPlayer().update(deltaTime);
-        }
+        gameLevelsManager.getCurrentLevel().getPlayer().update(deltaTime);
         for(Ball ball : balls){
             ball.update(deltaTime);
         }

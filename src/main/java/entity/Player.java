@@ -7,6 +7,7 @@ import tiles.TileManagerGame;
 import tiles.Vector;
 
 import java.awt.*;
+import java.sql.SQLOutput;
 
 public class Player extends Entity{
     GamePanel gamePanel;
@@ -40,7 +41,9 @@ public class Player extends Entity{
     }
 
     public void update(double deltaTime){
+        System.out.println("PLAYER UPDATE");
         if(keyHandler.leftPressed){
+            System.out.println("left presseeeddddddd");
             direction = "left";
             this.canMove(-2,0);
         }

@@ -15,23 +15,20 @@ public class GameLevelsManager {
         this.gamePanel = gamePanel;
         this.tileManager = tileManager;
 
-        currentLevel = createMap3();
-        currentLevelNum = 3;
+        currentLevel = null;
+        currentLevelNum = 0;
     }
 
     private void loadNextLevel() {
         currentLevelNum++;
         switch (currentLevelNum) {
             case 1:
-                System.out.println("created map1");
                 currentLevel = createMap1();
                 break;
             case 2:
-                System.out.println("created map2");
                 currentLevel = createMap2();
                 break;
             case 3:
-                System.out.println("created map3");
                 currentLevel = createMap3();
                 break;
         }
@@ -51,8 +48,14 @@ public class GameLevelsManager {
         }
 
         if(levelCleared || currentLevel == null){
-            System.out.println("level was cleared");
-            loadNextLevel();
+            if(currentLevelNum == 3){
+                gamePanel.setState(GamePanel.GameState.MENU);
+                gamePanel.menu.playButton.setVisible(true);
+                currentLevel = null;
+                currentLevelNum = 0;
+            }else {
+                loadNextLevel();
+            }
         }
     }
 
