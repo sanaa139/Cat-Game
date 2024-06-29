@@ -31,8 +31,8 @@ public class Menu {
         playButton.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                gamePanel.setState(GamePanel.GameState.GAME);
                 playButton.setVisible(false);
+                gamePanel.buttonClicked = true;
             }
 
             @Override

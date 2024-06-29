@@ -28,9 +28,9 @@ public class GameLevelsManager {
             case 2:
                 currentLevel = createMap2();
                 break;
-            case 3:
-                currentLevel = createMap3();
-                break;
+            //case 3:
+            //    currentLevel = createMap3();
+            //    break;
         }
     }
 
@@ -48,7 +48,7 @@ public class GameLevelsManager {
         }
 
         if(levelCleared || currentLevel == null){
-            if(currentLevelNum == 3){
+            if(currentLevelNum == 2){
                 gamePanel.setState(GamePanel.GameState.MENU);
                 gamePanel.menu.playButton.setVisible(true);
                 currentLevel = null;
@@ -64,7 +64,7 @@ public class GameLevelsManager {
     }
 
     private GameLevel createMap1(){
-        Player player = new Player(gamePanel, gamePanel.keyHandler, tileManager, 348, 256);
+        Player player = new Player(gamePanel, gamePanel.keyHandler, tileManager, 348, 200);
         Ball ball1 = new Ball(gamePanel, tileManager, player, 330, 270);
         Ball ball2 = new Ball(gamePanel, tileManager, player, 560, 206);
         Ball[] balls = {ball1, ball2};

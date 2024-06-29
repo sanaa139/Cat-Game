@@ -2,6 +2,7 @@ package main;
 
 import entity.Ball;
 import entity.Door;
+import entity.Player;
 import tiles.TileManager;
 import tiles.TileManagerGame;
 import tiles.TileManagerMenu;
@@ -24,7 +25,7 @@ public class GamePanel extends JPanel implements Runnable{
     private static final int MAX_ROW_NUM = 16;
     private static final int SCREEN_WIDTH = MAX_COL_NUM * TILE_SIZE;
     private static final int SCREEN_HEIGHT = MAX_ROW_NUM * TILE_SIZE;
-
+    public volatile boolean buttonClicked = false;
 
     KeyHandler keyHandler = new KeyHandler();
     TileManagerGame tileManagerGame = new TileManagerGame(this);
@@ -51,7 +52,7 @@ public class GamePanel extends JPanel implements Runnable{
 
         double drawInterval = 1000000000 / FPS;
         double delta = 0;
-        long lastTime = System.nanoTime();
+        long lastTime = -1;
         long currentTime;
 
         long timer = 0;
@@ -60,8 +61,16 @@ public class GamePanel extends JPanel implements Runnable{
         GameLevel gameLevel;
 
         while(gameThread != null){
+            if(state == GameState.MENU && buttonClicked){
+                state = GameState.GAME;
+                buttonClicked = false;
+                lastTime = -1;
+            }
             //System.out.println("STATE OF THE GAME: " + state);
             if(state == GameState.GAME){
+                if(lastTime == -1){
+                    lastTime = System.nanoTime();
+                }
                 gameLevelsManager.checkIfLevelWasCleared();
                 gameLevel = gameLevelsManager.getCurrentLevel();
                 System.out.println("current level: " + gameLevel);
@@ -72,7 +81,7 @@ public class GamePanel extends JPanel implements Runnable{
 
                 if(delta >= 1){
                     if(gameLevel != null) {
-                        update(delta, gameLevel.getBalls(), gameLevel.getDoors());
+                        update(delta, gameLevel.getBalls(), gameLevel.getDoors(), gameLevel.getPlayer());
                     }
                     repaint();
                     delta--;
@@ -88,8 +97,8 @@ public class GamePanel extends JPanel implements Runnable{
         }
     }
 
-    public void update(double deltaTime, Ball[] balls, Door[] doors){
-        gameLevelsManager.getCurrentLevel().getPlayer().update(deltaTime);
+    public void update(double deltaTime, Ball[] balls, Door[] doors, Player player){
+        player.update(deltaTime);
         for(Ball ball : balls){
             ball.update(deltaTime);
         }
