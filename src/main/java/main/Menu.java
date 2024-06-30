@@ -57,8 +57,7 @@ public class Menu {
         });
     }
 
-
-    TileManagerMenu getTileManagerMenu(){
+    public TileManagerMenu getTileManagerMenu(){
         return tileManagerMenu;
     }
 

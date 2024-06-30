@@ -12,10 +12,8 @@ public class Entity {
     protected int height, width;
     protected Image image;
     protected String direction;
-
     protected GamePanel gamePanel;
     protected TileManagerGame tileManager;
-
     protected HitBox hitbox;
     protected int padding;
 
@@ -71,7 +69,7 @@ public class Entity {
         return false;
     }
 
-    public boolean canMove(double velocityX, double velocityY){
+    public boolean move(double velocityX, double velocityY){
         if(velocityX < 0) {
             int colIndex = (int) ((hitbox.getLeftWallLine().getX1() + velocityX) / gamePanel.getTileSize());
             int rowIndex = (int) ((hitbox.getLeftWallLine().getY1() + velocityY) / gamePanel.getTileSize());
@@ -120,7 +118,7 @@ public class Entity {
                     }
 
                 }
-                move(velocityX, velocityY);
+                performMove(velocityX, velocityY);
                 return true;
             }
         }else{
@@ -171,29 +169,36 @@ public class Entity {
                     }
 
                 }
-                move(velocityX, velocityY);
+                performMove(velocityX, velocityY);
                 return true;
             }
         }
     }
 
-    public void move(double velX, double velY){
+    private void performMove(double velX, double velY){
         positionX += velX;
         positionY += velY;
     }
 
+    /**
+     * Apply gravity to entity.
+     * @param deltaTime
+     */
     protected void applyGravity(double deltaTime){
+        System.out.println("velocityY: " + velocityY);
+        // If velocity is equal to 0, it means that entity is touching the floor
         if(velocityY == 0){
             int colIndex = (int) (hitbox.getLowerWallLine().getX1() / gamePanel.getTileSize());
-            int rowIndex = (int) ((hitbox.getLowerWallLine().getY1() + 0.1) / gamePanel.getTileSize());
+            int rowIndex = (int) ((hitbox.getLowerWallLine().getY1() + 1) / gamePanel.getTileSize());
             Tile tile = tileManager.getTilesArray()[colIndex][rowIndex];
             Tile decorationTile = tileManager.getDecorationsTilesArray()[colIndex][rowIndex];
 
             int colIndex2 = (int) (hitbox.getLowerWallLine().getX2() / gamePanel.getTileSize());
-            int rowIndex2 = (int) ((hitbox.getLowerWallLine().getY2() + 0.1) / gamePanel.getTileSize());
+            int rowIndex2 = (int) ((hitbox.getLowerWallLine().getY2() + 1) / gamePanel.getTileSize());
             Tile tile2 = tileManager.getTilesArray()[colIndex2][rowIndex2];
             Tile decorationTile2 = tileManager.getDecorationsTilesArray()[colIndex2][rowIndex2];
 
+            // there is no tile below entity that is collisional, so increase positionY of entity
             if(!tile.isCollisional() && !tile2.isCollisional() && (decorationTile == null || !decorationTile.isCollisional()) && (decorationTile2 == null || !decorationTile2.isCollisional())){
                 positionY += deltaTime * velocityY;
                 velocityY += deltaTime * gravityY;
@@ -207,16 +212,20 @@ public class Entity {
                 fallOnTheGround(hitbox.getLowerWallLine().getX2(), hitbox.getLowerWallLine().getY2(), colIndex2, rowIndex2, deltaTime, tileManager.getDecorationsTilesArray());
             }
         }else {
-            int colIndex = (int) (hitbox.getUpperWallLine().getX1() / gamePanel.getTileSize());
+            // if velocityY is not equal 0 then entity is in the air
+            // when in the air, velocityY < 0, which means that vector of velocityY is facing up
+            // when falling down, velocityY > 0, so we can calculate what tile is below entity and make it not exceed collisional tile
+            int colIndex = (int) (hitbox.getLowerWallLine().getX1() / gamePanel.getTileSize());
             int rowIndex = (int) ((hitbox.getLowerWallLine().getY1() + velocityY) / gamePanel.getTileSize());
             Tile tile = tileManager.getTilesArray()[colIndex][rowIndex];
             Tile decorationTile = tileManager.getDecorationsTilesArray()[colIndex][rowIndex];
 
-            int colIndex2 = (int) (hitbox.getUpperWallLine().getX2() / gamePanel.getTileSize());
+            int colIndex2 = (int) (hitbox.getLowerWallLine().getX2() / gamePanel.getTileSize());
             int rowIndex2 = (int) ((hitbox.getLowerWallLine().getY2() + velocityY) / gamePanel.getTileSize());
             Tile tile2 = tileManager.getTilesArray()[colIndex2][rowIndex2];
             Tile decorationTile2 = tileManager.getDecorationsTilesArray()[colIndex2][rowIndex2];
 
+            // there is no tile below entity that is collisional, so increase positionY of entity
             if(!tile.isCollisional() && !tile2.isCollisional() && (decorationTile == null || !decorationTile.isCollisional()) && (decorationTile2 == null || !decorationTile2.isCollisional())) {
                 positionY += deltaTime * velocityY;
                 velocityY += deltaTime * gravityY;
@@ -234,6 +243,16 @@ public class Entity {
         }
     }
 
+    /**
+     * Calculate the intersection of two lines.
+     * One line is a vector of velocityY from entity and the second line is the upper line of a tile.
+     * @param x1
+     * @param y1
+     * @param colIndex
+     * @param rowIndex
+     * @param deltaTime
+     * @param arr
+     */
     private void fallOnTheGround(double x1, double y1, int colIndex, int rowIndex, double deltaTime, Tile[][] arr){
         double x2 = x1;
         double y2 = y1 + (deltaTime * velocityY);

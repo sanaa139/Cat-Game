@@ -40,9 +40,9 @@ public class Door extends Entity{
                 if (((ball.getPositionX() >= this.hitbox.getLeftWallLine().getX1() && ball.getPositionX() < this.hitbox.getRightWallLine().getX1()) ||
                         (ball.getPositionX() <= this.hitbox.getRightWallLine().getX1() && ball.getPositionX() > this.hitbox.getLeftWallLine().getX1()))
                         && ball.getPositionY() >= hitbox.getUpperWallLine().getY1()) {
-                    ball.enteredTheDoor = true;
                     ball.setPositionX(400);
                     ball.setPositionY(0);
+                    ball.setEnteredTheDoor(true);
                     closed = true;
                 }
             }

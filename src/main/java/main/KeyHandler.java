@@ -6,12 +6,6 @@ import java.awt.event.KeyListener;
 public class KeyHandler implements KeyListener {
     public boolean leftPressed, rightPressed, upPressed;
     public boolean restartPressed;
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
-
     private void switchVariables(int code, boolean b){
         switch (code) {
             case KeyEvent.VK_A -> leftPressed = b;
@@ -19,6 +13,11 @@ public class KeyHandler implements KeyListener {
             case KeyEvent.VK_W -> upPressed = b;
             case KeyEvent.VK_R -> restartPressed = b;
         }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
     }
 
     @Override

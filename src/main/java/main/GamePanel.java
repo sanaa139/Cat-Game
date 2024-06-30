@@ -40,8 +40,6 @@ public class GamePanel extends JPanel implements Runnable{
 
         gameThread = new Thread(this);
         gameThread.start();
-
-        System.out.println(gameLevelsManager.currentLevelNum);
     }
 
     Thread gameThread;
@@ -66,14 +64,12 @@ public class GamePanel extends JPanel implements Runnable{
                 buttonClicked = false;
                 lastTime = -1;
             }
-            //System.out.println("STATE OF THE GAME: " + state);
             if(state == GameState.GAME){
                 if(lastTime == -1){
                     lastTime = System.nanoTime();
                 }
                 gameLevelsManager.checkIfLevelWasCleared();
                 gameLevel = gameLevelsManager.getCurrentLevel();
-                System.out.println("current level: " + gameLevel);
                 currentTime = System.nanoTime();
                 delta += (currentTime - lastTime) / drawInterval;
                 timer += (currentTime - lastTime);
@@ -90,7 +86,6 @@ public class GamePanel extends JPanel implements Runnable{
             }
 
             if(timer >= 1000000000){
-                System.out.println("FPS: " + drawCount);
                 drawCount = 0;
                 timer = 0;
             }

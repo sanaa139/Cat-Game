@@ -5,14 +5,12 @@ import main.KeyHandler;
 import tiles.Tile;
 import tiles.TileManagerGame;
 import tiles.Vector;
-
 import java.awt.*;
-import java.sql.SQLOutput;
 
 public class Player extends Entity{
-    GamePanel gamePanel;
-    KeyHandler keyHandler;
-    LoadImagesManager loadImagesManager;
+    private final GamePanel gamePanel;
+    private final KeyHandler keyHandler;
+    private final LoadImagesManager loadImagesManager;
     private int counter;
 
     public Player(GamePanel gamePanel, KeyHandler keyHandler, TileManagerGame tileManager, double x, double y){
@@ -20,36 +18,39 @@ public class Player extends Entity{
         this.gamePanel = gamePanel;
         this.keyHandler = keyHandler;
         loadImagesManager = new LoadImagesManager("player");
-        this.height = gamePanel.getTileSize();
-        this.width = gamePanel.getTileSize();
-        this.padding = 7;
-        this.positionX = x;
-        this.positionY = y;
 
+        height = gamePanel.getTileSize();
+        width = gamePanel.getTileSize();
+        positionX = x;
+        positionY = y;
+        padding = 7;
         updateHitBox();
 
-        this.image = loadImagesManager.getLeft1();
+        this.image = loadImagesManager.getLeftInactive();
         this.direction = "stay";
         counter = 0;
     }
 
-    public void updateHitBox(){
-        this.hitbox.setLeftWallLine(new Vector(this.positionX + this.padding, this.positionY, this.positionX + this.padding, this.positionY + height - 1));
-        this.hitbox.setRightWallLine(new Vector(this.positionX + width - this.padding, this.positionY, this.positionX + width - this.padding, this.positionY + height - 1));
-        this.hitbox.setUpperWallLine(new Vector(this.positionX + this.padding, this.positionY, this.positionX + width - this.padding, this.positionY));
-        this.hitbox.setLowerWallLine(new Vector(this.positionX + this.padding, this.positionY + height, this.positionX + width - this.padding, this.positionY + height));
+    private void updateHitBox(){
+        double x1 = this.positionX + this.padding;
+        double y1 = this.positionY;
+        double x2 = this.positionX + width - this.padding;
+        double y2 = this.positionY + height - 1;
+        this.hitbox.setLeftWallLine(new Vector(x1, y1, x1, y2));
+        this.hitbox.setRightWallLine(new Vector(x2, y1, x2, y2));
+        this.hitbox.setUpperWallLine(new Vector(x1, y1, x2, y1));
+        this.hitbox.setLowerWallLine(new Vector(x1, y2, x2, y2));
     }
 
     public void update(double deltaTime){
-        System.out.println("PLAYER UPDATE");
+        System.out.println("posX: " + positionX + ", posY: " + positionY);
         if(keyHandler.leftPressed){
-            System.out.println("left presseeeddddddd");
             direction = "left";
-            this.canMove(-2,0);
+            this.move(-2,0);
         }
         if(keyHandler.rightPressed){
             direction = "right";
-            this.canMove(2,0);
+            this.move(2,0);
         }
         if(!keyHandler.leftPressed && !keyHandler.rightPressed){
             direction = "stay";
@@ -103,13 +104,8 @@ public class Player extends Entity{
             counter = 0;
         }
         g2d.drawImage(image, (int)positionX, (int)positionY, this.width, this.height, null);
-        //g2d.setColor(Color.RED);
-        //g2d.fillRect((int) this.hitbox.getLeftWallLine().getX1(), (int) this.hitbox.getLeftWallLine().getY1(), (int) (this.hitbox.getUpperWallLine().getX2() - this.hitbox.getUpperWallLine().getX1()),  (int) (this.hitbox.getRightWallLine().getY2() - this.hitbox.getLeftWallLine().getY1()));
-    }
-
-    public void restart() {
-        positionX = 500;
-        positionY = 125;
+        g2d.setColor(Color.RED);
+        g2d.fillRect((int) this.hitbox.getLeftWallLine().getX1(), (int) this.hitbox.getLeftWallLine().getY1(), (int) (this.hitbox.getUpperWallLine().getX2() - this.hitbox.getUpperWallLine().getX1()),  (int) (this.hitbox.getRightWallLine().getY2() - this.hitbox.getRightWallLine().getY1()));
     }
 
     private void jump(){

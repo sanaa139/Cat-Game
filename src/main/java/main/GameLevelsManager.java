@@ -9,7 +9,7 @@ public class GameLevelsManager {
     private GamePanel gamePanel;
     private TileManagerGame tileManager;
     private GameLevel currentLevel;
-    public int currentLevelNum;
+    private int currentLevelNum;
 
     public GameLevelsManager(GamePanel gamePanel, TileManagerGame tileManager){
         this.gamePanel = gamePanel;
@@ -28,19 +28,17 @@ public class GameLevelsManager {
             case 2:
                 currentLevel = createMap2();
                 break;
-            //case 3:
-            //    currentLevel = createMap3();
-            //    break;
+            case 3:
+                currentLevel = createMap3();
+                break;
         }
     }
 
     public void checkIfLevelWasCleared(){
-        System.out.println("checking if level was cleared");
         boolean levelCleared = true;
         if (currentLevel != null) {
             for(Door door : currentLevel.getDoors()){
                 if(!door.isClosed()){
-                    System.out.println("is door closed: " + door.isClosed());
                     levelCleared = false;
                     break;
                 }
@@ -64,7 +62,7 @@ public class GameLevelsManager {
     }
 
     private GameLevel createMap1(){
-        Player player = new Player(gamePanel, gamePanel.keyHandler, tileManager, 348, 200);
+        Player player = new Player(gamePanel, gamePanel.keyHandler, tileManager, 348, 256);
         Ball ball1 = new Ball(gamePanel, tileManager, player, 330, 270);
         Ball ball2 = new Ball(gamePanel, tileManager, player, 560, 206);
         Ball[] balls = {ball1, ball2};
@@ -103,5 +101,9 @@ public class GameLevelsManager {
         Door[] doors = {door1, door2};
 
         return new GameLevel(balls, doors, "map3", player);
+    }
+
+    public int getCurrentLevelNum(){
+        return currentLevelNum;
     }
 }

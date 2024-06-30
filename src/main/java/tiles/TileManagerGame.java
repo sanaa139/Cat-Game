@@ -155,7 +155,6 @@ public class TileManagerGame implements TileManager{
 
             line = reader.readLine();
             while (line != null) {
-                System.out.println(line);
                 String[] words = line.split("\\s+");
                 int i = 0;
                 for (int col = 0; col < gamePanel.getMaxColNum(); col++) {

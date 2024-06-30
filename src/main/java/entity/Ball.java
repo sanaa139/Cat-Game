@@ -10,10 +10,8 @@ import java.awt.*;
 import java.io.IOException;
 
 public class Ball extends Entity {
-    Player player;
-    boolean enteredTheDoor;
-    boolean touched;
-    boolean isOnTheFloor;
+    private Player player;
+    private boolean enteredTheDoor, touched, isOnTheFloor;
     private String direction;
     private int currentMOvement;
     private int maximumMovement = 40;
@@ -25,14 +23,15 @@ public class Ball extends Entity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        enteredTheDoor = false;
+
         this.player = player;
         this.positionX = positionX;
         this.positionY = positionY;
+
         width = 20;
         height = 18;
+        enteredTheDoor = false;
         updateHitBox();
-        System.out.println("CREATED BALL");
     }
 
     public void update(double deltaTime) {
@@ -67,7 +66,7 @@ public class Ball extends Entity {
 
             if (alpha >= 0 && alpha <= 1 && beta >= 0 && beta <= 1) {
                 System.out.println("TOUCHED");
-                if (!canMove(2, 0)) {
+                if (!move(2, 0)) {
                     direction = "left";
                     touched = true;
                 }
@@ -88,7 +87,7 @@ public class Ball extends Entity {
 
             if (alpha >= 0 && alpha <= 1 && beta >= 0 && beta <= 1) {
                 System.out.println("TOUCHED");
-                if (!canMove(-2, 0)) {
+                if (!move(-2, 0)) {
                     direction = "right";
                     touched = true;
                 }
@@ -181,5 +180,9 @@ public class Ball extends Entity {
 
     public double getPositionY(){
         return positionY;
+    }
+
+    public void setEnteredTheDoor(boolean enteredTheDoor){
+        this.enteredTheDoor = enteredTheDoor;
     }
 }
