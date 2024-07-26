@@ -20,15 +20,15 @@ public class GamePanel extends JPanel implements Runnable{
     private GameState state = GameState.MENU;
     private static final int ORIGINAL_TILE_SIZE = 16;
     private static final int SCALE = 2;
-    private static final int TILE_SIZE = ORIGINAL_TILE_SIZE * SCALE;
-    private static final int MAX_COL_NUM = 32;
-    private static final int MAX_ROW_NUM = 16;
-    private static final int SCREEN_WIDTH = MAX_COL_NUM * TILE_SIZE;
-    private static final int SCREEN_HEIGHT = MAX_ROW_NUM * TILE_SIZE;
+    public static final int TILE_SIZE = ORIGINAL_TILE_SIZE * SCALE;
+    public static final int MAX_COL_NUM = 32;
+    public static final int MAX_ROW_NUM = 16;
+    public static final int SCREEN_WIDTH = MAX_COL_NUM * TILE_SIZE;
+    public static final int SCREEN_HEIGHT = MAX_ROW_NUM * TILE_SIZE;
     public volatile boolean buttonClicked = false;
 
     KeyHandler keyHandler = new KeyHandler();
-    TileManagerGame tileManagerGame = new TileManagerGame(this);
+    TileManagerGame tileManagerGame = new TileManagerGame();
     Menu menu = new Menu(this);
     GameLevelsManager gameLevelsManager = new GameLevelsManager(this, tileManagerGame);
 
@@ -93,7 +93,7 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     public void update(double deltaTime, Ball[] balls, Door[] doors, Player player){
-        player.update(deltaTime);
+        player.update(deltaTime, keyHandler);
         for(Ball ball : balls){
             ball.update(deltaTime);
         }
@@ -127,28 +127,6 @@ public class GamePanel extends JPanel implements Runnable{
                 }
                 break;
         }
-    }
-
-    public int getTileSize(){
-        return TILE_SIZE;
-    }
-
-    public int getMaxColNum(){
-        return MAX_COL_NUM;
-    }
-
-    public int getMaxRowNum(){
-        return MAX_ROW_NUM;
-    }
-
-    public int getScale(){
-        return SCALE;
-    }
-    public int getScreenWidth(){
-        return SCREEN_WIDTH;
-    }
-    public int getScreenHeight(){
-        return SCREEN_HEIGHT;
     }
 
     public void setState(GameState state){

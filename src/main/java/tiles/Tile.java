@@ -9,21 +9,18 @@ public class Tile {
     private Image image;
     private boolean collisional;
     private final Vector position;
-    private int height, width;
-    private Vector upperWallLine, rightWallLine, lowerWallLine, leftWallLine;
-    private GamePanel gamePanel;
-
+    private final int height, width;
+    private final Vector upperWallLine, rightWallLine, lowerWallLine, leftWallLine;
     public String name;
 
-    public Tile(Image image, GamePanel gamePanel, boolean collisional, String name){
+    public Tile(Image image, boolean collisional, String name){
         this.image = image;
-        this.gamePanel = gamePanel;
         position = new Vector();
         this.collisional = collisional;
 
         this.name = name;
-        height = gamePanel.getTileSize();
-        width = gamePanel.getTileSize();
+        height = GamePanel.TILE_SIZE;
+        width = GamePanel.TILE_SIZE;
 
         upperWallLine = new Vector();
         rightWallLine = new Vector();
@@ -31,9 +28,8 @@ public class Tile {
         lowerWallLine = new Vector();
     }
 
-    public Tile(Image image, GamePanel gamePanel, boolean collisional, String name, int height, int width){
+    public Tile(Image image, boolean collisional, String name, int height, int width){
         this.image = image;
-        this.gamePanel = gamePanel;
         position = new Vector();
         this.collisional = collisional;
 
@@ -116,6 +112,6 @@ public class Tile {
     }
 
     public Tile copy() {
-        return new Tile(image, gamePanel, collisional, name, height, width);
+        return new Tile(image, collisional, name, height, width);
     }
 }

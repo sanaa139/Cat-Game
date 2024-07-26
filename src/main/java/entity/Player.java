@@ -8,19 +8,15 @@ import tiles.Vector;
 import java.awt.*;
 
 public class Player extends Entity{
-    private final GamePanel gamePanel;
-    private final KeyHandler keyHandler;
     private final LoadImagesManager loadImagesManager;
     private int counter;
 
-    public Player(GamePanel gamePanel, KeyHandler keyHandler, TileManagerGame tileManager, double x, double y){
-        super(gamePanel, tileManager);
-        this.gamePanel = gamePanel;
-        this.keyHandler = keyHandler;
+    public Player(TileManagerGame tileManager, double x, double y){
+        super(tileManager);
         loadImagesManager = new LoadImagesManager("player");
 
-        height = gamePanel.getTileSize();
-        width = gamePanel.getTileSize();
+        height = GamePanel.TILE_SIZE;
+        width = GamePanel.TILE_SIZE;
         positionX = x;
         positionY = y;
         padding = 7;
@@ -42,8 +38,7 @@ public class Player extends Entity{
         this.hitbox.setLowerWallLine(new Vector(x1, y2, x2, y2));
     }
 
-    public void update(double deltaTime){
-        System.out.println("posX: " + positionX + ", posY: " + positionY);
+    public void update(double deltaTime, KeyHandler keyHandler){
         if(keyHandler.leftPressed){
             direction = "left";
             this.move(-2,0);
@@ -115,27 +110,26 @@ public class Player extends Entity{
     }
 
     private void checkForCeilingCollision(double deltaTime) {
-        int colIndex = (int) (hitbox.getUpperWallLine().getX1() / gamePanel.getTileSize());
-        int rowIndex = (int) ((hitbox.getUpperWallLine().getY1() + velocityY) / gamePanel.getTileSize());
-        int colIndex2 = (int) (hitbox.getUpperWallLine().getX2() / gamePanel.getTileSize());
-        int rowIndex2 = (int) ((hitbox.getUpperWallLine().getY2() + velocityY) / gamePanel.getTileSize());
+        int colIndex = (int) (hitbox.getUpperWallLine().getX1() / GamePanel.TILE_SIZE);
+        int rowIndex = (int) ((hitbox.getUpperWallLine().getY1() + velocityY) / GamePanel.TILE_SIZE);
+        int colIndex2 = (int) (hitbox.getUpperWallLine().getX2() / GamePanel.TILE_SIZE);
+        int rowIndex2 = (int) ((hitbox.getUpperWallLine().getY2() + velocityY) / GamePanel.TILE_SIZE);
         if(velocityY != 0) {
             if (tileManager.getTilesArray()[colIndex][rowIndex].isCollisional()) {
-                checkForCeiling(hitbox.getUpperWallLine().getX1(), hitbox.getUpperWallLine().getY1(), deltaTime, tileManager.getTilesArray(), colIndex, rowIndex, "left");
+                checkIfHitCeiling(hitbox.getUpperWallLine().getX1(), hitbox.getUpperWallLine().getY1(), deltaTime, tileManager.getTilesArray(), colIndex, rowIndex, "left");
             } else if (tileManager.getTilesArray()[colIndex2][rowIndex2].isCollisional()) {
-                checkForCeiling(hitbox.getUpperWallLine().getX2(), hitbox.getUpperWallLine().getY2(), deltaTime, tileManager.getTilesArray(), colIndex2, rowIndex2, "right");
+                checkIfHitCeiling(hitbox.getUpperWallLine().getX2(), hitbox.getUpperWallLine().getY2(), deltaTime, tileManager.getTilesArray(), colIndex2, rowIndex2, "right");
             } else {
                 if (tileManager.getDecorationsTilesArray()[colIndex][rowIndex] != null && tileManager.getDecorationsTilesArray()[colIndex][rowIndex].isCollisional()) {
-                    checkForCeiling(hitbox.getUpperWallLine().getX1(), hitbox.getUpperWallLine().getY1(), deltaTime, tileManager.getDecorationsTilesArray(), colIndex, rowIndex, "left");
+                    checkIfHitCeiling(hitbox.getUpperWallLine().getX1(), hitbox.getUpperWallLine().getY1(), deltaTime, tileManager.getDecorationsTilesArray(), colIndex, rowIndex, "left");
                 } else if (tileManager.getDecorationsTilesArray()[colIndex2][rowIndex2] != null && tileManager.getDecorationsTilesArray()[colIndex2][rowIndex2].isCollisional()) {
-                    checkForCeiling(hitbox.getUpperWallLine().getX2(), hitbox.getUpperWallLine().getY2(), deltaTime, tileManager.getDecorationsTilesArray(), colIndex2, rowIndex2, "right");
+                    checkIfHitCeiling(hitbox.getUpperWallLine().getX2(), hitbox.getUpperWallLine().getY2(), deltaTime, tileManager.getDecorationsTilesArray(), colIndex2, rowIndex2, "right");
                 }
             }
         }
     }
 
-
-    private void checkForCeiling(double x1, double y1, double deltaTime, Tile[][] arr, int colIndex, int rowIndex, String direction){
+    private void checkIfHitCeiling(double x1, double y1, double deltaTime, Tile[][] arr, int colIndex, int rowIndex, String direction){
         double x2 = x1;
         double y2 = y1 + (deltaTime * velocityY);
         double x3 = arr[colIndex][rowIndex].getLowerWallLine().getX1();

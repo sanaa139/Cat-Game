@@ -12,22 +12,20 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 public class TileManagerMenu implements TileManager{
-    private GamePanel gamePanel;
     private Tile backgroundMenuTile;
     private Tile[][] menuTilesArray;
     private String mapName;
-    public TileManagerMenu(GamePanel gamePanel){
-        this.gamePanel = gamePanel;
+    public TileManagerMenu(){
         this.mapName = "menu";
 
-        menuTilesArray = new Tile[gamePanel.getMaxColNum()][gamePanel.getMaxRowNum()];
+        menuTilesArray = new Tile[GamePanel.MAX_COL_NUM][GamePanel.MAX_ROW_NUM];
         initializeTiles();
         createMap();
     }
 
     private void initializeTiles(){
         try{
-            backgroundMenuTile = new Tile(ImageIO.read(getClass().getResourceAsStream("/tiles/background/background.jpg")), gamePanel, false,"BLUE_BACKGROUND");
+            backgroundMenuTile = new Tile(ImageIO.read(getClass().getResourceAsStream("/tiles/background/background.jpg")), false,"BLUE_BACKGROUND");
         }catch(IOException e){
             e.printStackTrace();
         }
@@ -48,13 +46,13 @@ public class TileManagerMenu implements TileManager{
             while (line != null) {
                 String[] words = line.split("\\s+");
                 int i = 0;
-                for (int col = 0; col < gamePanel.getMaxColNum(); col++) {
+                for (int col = 0; col < GamePanel.MAX_COL_NUM; col++) {
                     Tile tile = switch (words[i]) {
                         case "B" -> backgroundMenuTile.copy();
                         default -> null;
                     };
 
-                    tile.setPosition(col * gamePanel.getTileSize(), row * gamePanel.getTileSize());
+                    tile.setPosition(col * GamePanel.TILE_SIZE, row * GamePanel.TILE_SIZE);
                     menuTilesArray[col][row] = tile;
                     i++;
                 }

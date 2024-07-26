@@ -1,6 +1,5 @@
 package entity;
 
-import main.GamePanel;
 import tiles.TileManagerGame;
 import tiles.Vector;
 
@@ -14,8 +13,8 @@ public class Door extends Entity{
     private Ball[] ballsArray;
     private int counter;
     private boolean closed;
-    public Door(GamePanel gamePanel, TileManagerGame tileManager, Ball[] ballsArray, double positionX, double positionY){
-        super(gamePanel, tileManager);
+    public Door(TileManagerGame tileManager, Ball[] ballsArray, double positionX, double positionY){
+        super(tileManager);
         this.ballsArray = ballsArray;
 
         this.positionX = positionX;

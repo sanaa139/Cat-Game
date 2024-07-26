@@ -10,14 +10,14 @@ import java.awt.*;
 import java.io.IOException;
 
 public class Ball extends Entity {
-    private Player player;
+    private final Player player;
     private boolean enteredTheDoor, bounceBackFromHittingAWall, isOnTheFloor;
     private String bounceBackFromHittingAWallDirection;
     private int numberOfStepsTakenFromBouncingBack;
-    private int maximumNumberOfStepsAllowedFromBouncingBack = 40;
+    private final int maximumNumberOfStepsAllowedFromBouncingBack = 40;
 
-    public Ball(GamePanel gamePanel, TileManagerGame tileManager, Player player, double positionX, double positionY) {
-        super(gamePanel, tileManager);
+    public Ball(TileManagerGame tileManager, Player player, double positionX, double positionY) {
+        super(tileManager);
         try {
             image = ImageIO.read(getClass().getResourceAsStream("/entity/ball.png"));
         } catch (IOException e) {
@@ -103,11 +103,11 @@ public class Ball extends Entity {
     }
 
     private void checkIfIsOnTheFloor() {
-        int colIndex = (int) (hitbox.getLowerWallLine().getX1() / gamePanel.getTileSize());
-        int rowIndex = (int) ((hitbox.getLowerWallLine().getY1() + 1) / gamePanel.getTileSize());
+        int colIndex = (int) (hitbox.getLowerWallLine().getX1() / GamePanel.TILE_SIZE);
+        int rowIndex = (int) ((hitbox.getLowerWallLine().getY1() + 1) / GamePanel.TILE_SIZE);
 
-        int colIndex2 = (int) (hitbox.getLowerWallLine().getX2() / gamePanel.getTileSize());
-        int rowIndex2 = (int) ((hitbox.getLowerWallLine().getY2() + 1) / gamePanel.getTileSize());
+        int colIndex2 = (int) (hitbox.getLowerWallLine().getX2() / GamePanel.TILE_SIZE);
+        int rowIndex2 = (int) ((hitbox.getLowerWallLine().getY2() + 1) / GamePanel.TILE_SIZE);
 
         if(!tileManager.getTilesArray()[colIndex][rowIndex].isCollisional() && !tileManager.getTilesArray()[colIndex2][rowIndex2].isCollisional()){
             bounceBackFromHittingAWall = false;
@@ -170,7 +170,6 @@ public class Ball extends Entity {
                     this.positionX -= 6;
                 }
                 this.numberOfStepsTakenFromBouncingBack += 6;
-
 
                 if(numberOfStepsTakenFromBouncingBack >= maximumNumberOfStepsAllowedFromBouncingBack){
                     numberOfStepsTakenFromBouncingBack = 0;

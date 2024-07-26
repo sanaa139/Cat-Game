@@ -8,7 +8,6 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 public class TileManagerGame implements TileManager{
-    private GamePanel gamePanel;
     private Tile[][] tilesArray;
     private Tile[][] decorationsTilesArray;
     private final Tile[] wallsArray;
@@ -18,11 +17,9 @@ public class TileManagerGame implements TileManager{
     private Tile backgroundTile;
     private String mapName;
 
-    public TileManagerGame(GamePanel gamePanel){
-        this.gamePanel = gamePanel;
-
-        tilesArray = new Tile[gamePanel.getMaxColNum()][gamePanel.getMaxRowNum()];
-        decorationsTilesArray = new Tile[gamePanel.getMaxColNum()][gamePanel.getMaxRowNum()];
+    public TileManagerGame(){
+        tilesArray = new Tile[GamePanel.MAX_COL_NUM][GamePanel.MAX_ROW_NUM];
+        decorationsTilesArray = new Tile[GamePanel.MAX_COL_NUM][GamePanel.MAX_ROW_NUM];
         wallsArray = new Tile[8];
         wallsCornersArray = new Tile[4];
         backgroundsWallsArray = new Tile[17];
@@ -35,7 +32,7 @@ public class TileManagerGame implements TileManager{
 
     private void loadSprites(){
         try {
-            backgroundTile = new Tile(ImageIO.read(getClass().getResourceAsStream("/tiles/background/background.jpg")), gamePanel, false,"BLACK_BACKGROUND");
+            backgroundTile = new Tile(ImageIO.read(getClass().getResourceAsStream("/tiles/background/background.jpg")), false,"BLACK_BACKGROUND");
         }catch(IOException e){
             e.printStackTrace();
         }
@@ -48,15 +45,15 @@ public class TileManagerGame implements TileManager{
         try{
             Tile tile;
             for(int i = 1; i <= wallsArray.length; i++){
-                tile = new Tile(ImageIO.read(getClass().getResourceAsStream("/tiles/wall/wall" + i + ".jpg")), gamePanel, true, "WALL " + i);
+                tile = new Tile(ImageIO.read(getClass().getResourceAsStream("/tiles/wall/wall" + i + ".jpg")), true, "WALL " + i);
                 wallsArray[i - 1] = tile;
             }
             for(int i = 1; i <= wallsCornersArray.length; i++){
-                tile = new Tile(ImageIO.read(getClass().getResourceAsStream("/tiles/wallCorners/corner" + i + ".jpg")), gamePanel,true, "WALL_CORNER " + i);
+                tile = new Tile(ImageIO.read(getClass().getResourceAsStream("/tiles/wallCorners/corner" + i + ".jpg")),true, "WALL_CORNER " + i);
                 wallsCornersArray[i - 1] = tile;
             }
             for(int i = 1; i <= backgroundsWallsArray.length; i++){
-                tile = new Tile(ImageIO.read(getClass().getResourceAsStream("/tiles/background/backgroundWall" + i + ".jpg")), gamePanel, false,"BACKGROUND " + i);
+                tile = new Tile(ImageIO.read(getClass().getResourceAsStream("/tiles/background/backgroundWall" + i + ".jpg")), false,"BACKGROUND " + i);
                 backgroundsWallsArray[i - 1] = tile;
             }
         }catch(IOException e){
@@ -68,24 +65,24 @@ public class TileManagerGame implements TileManager{
         try{
             Tile tile;
             for(int i = 1; i <= 3; i++){
-                tile = new Tile(ImageIO.read(getClass().getResourceAsStream("/tiles/decorations/platform" + i + ".png")), gamePanel, true, "PLATFORM " + i, 15, gamePanel.getTileSize());
+                tile = new Tile(ImageIO.read(getClass().getResourceAsStream("/tiles/decorations/platform" + i + ".png")), true, "PLATFORM " + i, 15, GamePanel.TILE_SIZE);
                 decorationsArray[i - 1] = tile;
             }
-            tile = new Tile(ImageIO.read(getClass().getResourceAsStream("/tiles/decorations/platform4.png")), gamePanel, true, "PLATFORM4", 14, gamePanel.getTileSize());
+            tile = new Tile(ImageIO.read(getClass().getResourceAsStream("/tiles/decorations/platform4.png")), true, "PLATFORM4", 14, GamePanel.TILE_SIZE);
             decorationsArray[3] = tile;
             for(int i = 1; i <= 4; i++){
-                tile = new Tile(ImageIO.read(getClass().getResourceAsStream("/tiles/decorations/banner" + i + ".png")), gamePanel, false, "BANNER " + i, 32, gamePanel.getTileSize());
+                tile = new Tile(ImageIO.read(getClass().getResourceAsStream("/tiles/decorations/banner" + i + ".png")), false, "BANNER " + i, 32, GamePanel.TILE_SIZE);
                 decorationsArray[i + 3] = tile;
             }
             for(int i = 1; i <= 4; i++){
-                tile = new Tile(ImageIO.read(getClass().getResourceAsStream("/tiles/decorations/window1_" + i + ".png")), gamePanel, false, "WINDOW1_ " + i, 32, gamePanel.getTileSize());
+                tile = new Tile(ImageIO.read(getClass().getResourceAsStream("/tiles/decorations/window1_" + i + ".png")), false, "WINDOW1_ " + i, 32, GamePanel.TILE_SIZE);
                 decorationsArray[i + 7] = tile;
             }
             for(int i = 1; i <= 4; i++){
-                tile = new Tile(ImageIO.read(getClass().getResourceAsStream("/tiles/decorations/window2_" + i + ".png")), gamePanel, false, "WINDOW2_ " + i, 32, gamePanel.getTileSize());
+                tile = new Tile(ImageIO.read(getClass().getResourceAsStream("/tiles/decorations/window2_" + i + ".png")), false, "WINDOW2_ " + i, 32, GamePanel.TILE_SIZE);
                 decorationsArray[i + 11] = tile;
             }
-            tile = new Tile(ImageIO.read(getClass().getResourceAsStream("/tiles/decorations/box.png")), gamePanel, true, "BOX", gamePanel.getTileSize(), gamePanel.getTileSize());
+            tile = new Tile(ImageIO.read(getClass().getResourceAsStream("/tiles/decorations/box.png")), true, "BOX", GamePanel.TILE_SIZE, GamePanel.TILE_SIZE);
             decorationsArray[16] = tile;
         }catch(IOException e){
             e.printStackTrace();
@@ -105,7 +102,7 @@ public class TileManagerGame implements TileManager{
             while (line != null) {
                 String[] words = line.split("\\s+");
                 int i = 0;
-                for (int col = 0; col < gamePanel.getMaxColNum(); col++) {
+                for (int col = 0; col < GamePanel.MAX_COL_NUM; col++) {
                     Tile tile = switch (words[i]) {
                         case "W1" -> wallsArray[0].copy();
                         case "W2" -> wallsArray[1].copy();
@@ -138,7 +135,7 @@ public class TileManagerGame implements TileManager{
                         case "BW17" -> backgroundsWallsArray[16].copy();
                         default -> backgroundTile.copy();
                     };
-                    tile.setPosition(col * gamePanel.getTileSize(), row * gamePanel.getTileSize());
+                    tile.setPosition(col * GamePanel.TILE_SIZE, row * GamePanel.TILE_SIZE);
                     tilesArray[col][row] = tile;
                     i++;
                 }
@@ -157,7 +154,7 @@ public class TileManagerGame implements TileManager{
             while (line != null) {
                 String[] words = line.split("\\s+");
                 int i = 0;
-                for (int col = 0; col < gamePanel.getMaxColNum(); col++) {
+                for (int col = 0; col < GamePanel.MAX_COL_NUM; col++) {
                     Tile tile = switch (words[i]) {
                         case "P1" -> decorationsArray[0].copy();
                         case "P2" -> decorationsArray[1].copy();
@@ -179,7 +176,7 @@ public class TileManagerGame implements TileManager{
                         default -> null;
                     };
                     if (tile != null) {
-                        tile.setPosition(col * gamePanel.getTileSize(), row * gamePanel.getTileSize());
+                        tile.setPosition(col * GamePanel.TILE_SIZE, row * GamePanel.TILE_SIZE);
                         decorationsTilesArray[col][row] = tile;
                     } else {
                         decorationsTilesArray[col][row] = null;

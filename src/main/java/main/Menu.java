@@ -13,7 +13,7 @@ public class Menu {
     private TileManagerMenu tileManagerMenu;
 
     public Menu(GamePanel gamePanel){
-        this.tileManagerMenu = new TileManagerMenu(gamePanel);
+        this.tileManagerMenu = new TileManagerMenu();
         createPLayButton(gamePanel);
     }
 
@@ -21,7 +21,7 @@ public class Menu {
         playButton = new JButton("PLAY");
         int buttonWidth = 100;
         int buttonHeight = 50;
-        playButton.setBounds(gamePanel.getScreenWidth() / 2 - buttonWidth / 2, gamePanel.getScreenHeight() / 2 - buttonHeight / 2, buttonWidth, buttonHeight);
+        playButton.setBounds(GamePanel.SCREEN_WIDTH / 2 - buttonWidth / 2, GamePanel.SCREEN_HEIGHT / 2 - buttonHeight / 2, buttonWidth, buttonHeight);
         playButton.setFont(new Font("Serif",Font.BOLD,20));
         playButton.setBackground(new Color(255,128,0));
         playButton.setFocusPainted(false);

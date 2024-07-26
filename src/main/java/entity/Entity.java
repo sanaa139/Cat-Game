@@ -12,13 +12,11 @@ public class Entity {
     protected int height, width;
     protected Image image;
     protected String direction;
-    protected GamePanel gamePanel;
     protected TileManagerGame tileManager;
     protected HitBox hitbox;
     protected int padding;
 
-    Entity(GamePanel gamePanel, TileManagerGame tileManager){
-        this.gamePanel = gamePanel;
+    Entity(TileManagerGame tileManager){
         this.tileManager = tileManager;
         this.hitbox = new HitBox();
         velocityX = 0;
@@ -71,9 +69,9 @@ public class Entity {
 
     public boolean move(double velocityX, double velocityY){
         if(velocityX < 0) {
-            int colIndex = (int) ((hitbox.getLeftWallLine().getX1() + velocityX) / gamePanel.getTileSize());
-            int rowIndex = (int) ((hitbox.getLeftWallLine().getY1() + velocityY) / gamePanel.getTileSize());
-            int rowIndex2 = (int) ((hitbox.getLeftWallLine().getY2() + velocityY) / gamePanel.getTileSize());
+            int colIndex = (int) ((hitbox.getLeftWallLine().getX1() + velocityX) / GamePanel.TILE_SIZE);
+            int rowIndex = (int) ((hitbox.getLeftWallLine().getY1() + velocityY) / GamePanel.TILE_SIZE);
+            int rowIndex2 = (int) ((hitbox.getLeftWallLine().getY2() + velocityY) / GamePanel.TILE_SIZE);
 
             if(tileManager.getTilesArray()[colIndex][rowIndex].isCollisional()) {
                 System.out.println(tileManager.getTilesArray()[colIndex][rowIndex].name);
@@ -102,7 +100,7 @@ public class Entity {
                 );
             }else {
                 for (int i = 0; i <= height - 1; i++) {
-                    rowIndex = (int) ((positionY + i) / gamePanel.getTileSize());
+                    rowIndex = (int) ((positionY + i) / GamePanel.TILE_SIZE);
                     if(tileManager.getDecorationsTilesArray()[colIndex][rowIndex] != null && tileManager.getDecorationsTilesArray()[colIndex][rowIndex].isCollisional()) {
                         if (doLinesIntersects(
                                 hitbox.getLeftWallLine().getX1(),
@@ -123,9 +121,9 @@ public class Entity {
                 return true;
             }
         }else{
-            int colIndex = (int) ((hitbox.getRightWallLine().getX1() + velocityX) / gamePanel.getTileSize());
-            int rowIndex = (int) ((hitbox.getRightWallLine().getY1() + velocityY) / gamePanel.getTileSize());
-            int rowIndex2 = (int) ((hitbox.getRightWallLine().getY2() + velocityY) / gamePanel.getTileSize());
+            int colIndex = (int) ((hitbox.getRightWallLine().getX1() + velocityX) / GamePanel.TILE_SIZE);
+            int rowIndex = (int) ((hitbox.getRightWallLine().getY1() + velocityY) / GamePanel.TILE_SIZE);
+            int rowIndex2 = (int) ((hitbox.getRightWallLine().getY2() + velocityY) / GamePanel.TILE_SIZE);
 
             if(tileManager.getTilesArray()[colIndex][rowIndex].isCollisional()) {
                 return doLinesIntersects(
@@ -153,7 +151,7 @@ public class Entity {
                 );
             }else {
                 for (int i = 0; i <= height - 1; i++) {
-                    rowIndex = (int) ((positionY + i) / gamePanel.getTileSize());
+                    rowIndex = (int) ((positionY + i) / GamePanel.TILE_SIZE);
                     if (tileManager.getDecorationsTilesArray()[colIndex][rowIndex] != null && tileManager.getDecorationsTilesArray()[colIndex][rowIndex].isCollisional()) {
                         if (doLinesIntersects(
                                 hitbox.getRightWallLine().getX1(),
@@ -187,16 +185,16 @@ public class Entity {
         int rowIndex, rowIndex2;
 
         if(velocityY == 0) {
-            rowIndex = (int) ((hitbox.getLowerWallLine().getY1() + 1) / gamePanel.getTileSize());
-            rowIndex2 = (int) ((hitbox.getLowerWallLine().getY2() + 1) / gamePanel.getTileSize());
+            rowIndex = (int) ((hitbox.getLowerWallLine().getY1() + 1) / GamePanel.TILE_SIZE);
+            rowIndex2 = (int) ((hitbox.getLowerWallLine().getY2() + 1) / GamePanel.TILE_SIZE);
         }else {
-            rowIndex = (int) ((hitbox.getLowerWallLine().getY1() + velocityY) / gamePanel.getTileSize());
-            rowIndex2 = (int) ((hitbox.getLowerWallLine().getY2() + velocityY) / gamePanel.getTileSize());
+            rowIndex = (int) ((hitbox.getLowerWallLine().getY1() + velocityY) / GamePanel.TILE_SIZE);
+            rowIndex2 = (int) ((hitbox.getLowerWallLine().getY2() + velocityY) / GamePanel.TILE_SIZE);
             option = 2;
         }
         
-        int colIndex = (int) (hitbox.getLowerWallLine().getX1() / gamePanel.getTileSize());
-        int colIndex2 = (int) (hitbox.getLowerWallLine().getX2() / gamePanel.getTileSize());
+        int colIndex = (int) (hitbox.getLowerWallLine().getX1() / GamePanel.TILE_SIZE);
+        int colIndex2 = (int) (hitbox.getLowerWallLine().getX2() / GamePanel.TILE_SIZE);
 
         Tile tile = tileManager.getTilesArray()[colIndex][rowIndex];
         Tile decorationTile = tileManager.getDecorationsTilesArray()[colIndex][rowIndex];
