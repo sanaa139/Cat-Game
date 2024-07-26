@@ -98,7 +98,7 @@ public class GamePanel extends JPanel implements Runnable{
             ball.update(deltaTime);
         }
         for(Door door : doors){
-            door.update(deltaTime);
+            door.update();
         }
     }
 

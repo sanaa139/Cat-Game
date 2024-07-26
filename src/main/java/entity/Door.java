@@ -7,6 +7,7 @@ import tiles.Vector;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.IOException;
+import java.util.Objects;
 
 public class Door extends Entity{
     private Image[] sprites;
@@ -16,25 +17,21 @@ public class Door extends Entity{
     public Door(GamePanel gamePanel, TileManagerGame tileManager, Ball[] ballsArray, double positionX, double positionY){
         super(gamePanel, tileManager);
         this.ballsArray = ballsArray;
-        try {
-            image = ImageIO.read(getClass().getResourceAsStream("/doors/door4.png"));
-        }catch (IOException e){
-            e.printStackTrace();
-        }
+
         this.positionX = positionX;
         this.positionY = positionY;
-        width = 46;
-        height = 56;
 
         sprites = new Image[4];
         loadSprites();
         image = sprites[0];
+        width = image.getWidth(null);
+        height = image.getHeight(null);
 
         this.padding = 13;
         updateHitbox();
     }
 
-    public void update(double deltaTime){
+    public void update(){
         for(Ball ball : ballsArray){
             if(ball != null) {
                 if (((ball.getPositionX() >= this.hitbox.getLeftWallLine().getX1() && ball.getPositionX() < this.hitbox.getRightWallLine().getX1()) ||
@@ -50,22 +47,25 @@ public class Door extends Entity{
     }
 
     private void updateHitbox(){
-        this.hitbox.setLeftWallLine(new Vector(this.positionX + padding, this.positionY + padding * 2, this.positionX + padding, this.positionY + height - 1 ));
-        this.hitbox.setRightWallLine(new Vector(this.positionX + width - 1 - padding, this.positionY + padding * 2, this.positionX + width - 1 - padding, this.positionY + height - 1));
-        this.hitbox.setUpperWallLine(new Vector(this.positionX + padding, this.positionY + padding * 2, this.positionX + width - 1 - padding, this.positionY + padding * 2));
-        this.hitbox.setLowerWallLine(new Vector(this.positionX + padding, this.positionY + height, this.positionX + width - 1 - padding, this.positionY + height));
+        double x1 = this.positionX + padding;
+        double x2 = this.positionX + width - 1 - padding;
+        double y1 = this.positionY + padding * 2;
+        double y2 = this.positionY + height - 1;
+        this.hitbox.setLeftWallLine(new Vector(x1, y1, x1, y2));
+        this.hitbox.setRightWallLine(new Vector(x2, y1, x2, y2));
+        this.hitbox.setUpperWallLine(new Vector(x1, y1, x2, y1));
+        this.hitbox.setLowerWallLine(new Vector(x1, y2, x2, y2));
     }
 
     private void loadSprites(){
         Image img;
         for(int i = 1; i <= sprites.length; i++){
             try {
-                img = ImageIO.read(getClass().getResourceAsStream("/doors/door" + i + ".png"));
+                img = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/entity/doors/door" + i + ".png")));
                 sprites[i-1] = img;
             }catch (IOException e){
                 e.printStackTrace();
             }
-
         }
     }
 
@@ -84,8 +84,6 @@ public class Door extends Entity{
         }
         g2d.drawImage(image, (int)positionX, (int)positionY, width, height, null);
         counter++;
-        //g2d.setColor(Color.RED);
-        //g2d.fillRect((int) this.hitbox.getLeftWallLine().getX1(), (int) this.hitbox.getLeftWallLine().getY1(), (int) (this.hitbox.getUpperWallLine().getX2() - this.hitbox.getUpperWallLine().getX1()),  (int) (this.hitbox.getRightWallLine().getY2() - this.hitbox.getLeftWallLine().getY1()));
     }
 
     public boolean isClosed(){

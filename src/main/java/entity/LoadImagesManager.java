@@ -6,18 +6,18 @@ import java.io.IOException;
 
 public class LoadImagesManager {
     private Image left1, left2, left3, left4, left_inactive, right1, right2, right3, right4, right_inactive;
-    LoadImagesManager(String entity){
+    LoadImagesManager(String entityName){
         try{
-            left1 = ImageIO.read(getClass().getResourceAsStream("/" + entity + "/left1.png"));
-            left2 = ImageIO.read(getClass().getResourceAsStream("/" + entity + "/left2.png"));
-            left3 = ImageIO.read(getClass().getResourceAsStream("/" + entity + "/left3.png"));
-            left4 = ImageIO.read(getClass().getResourceAsStream("/" + entity + "/left4.png"));
-            left_inactive = ImageIO.read(getClass().getResourceAsStream("/" + entity + "/left_inactive.png"));
-            right1 = ImageIO.read(getClass().getResourceAsStream("/" + entity + "/right1.png"));
-            right2 = ImageIO.read(getClass().getResourceAsStream("/" + entity + "/right2.png"));
-            right3 = ImageIO.read(getClass().getResourceAsStream("/" + entity + "/right3.png"));
-            right4 = ImageIO.read(getClass().getResourceAsStream("/" + entity + "/right4.png"));
-            right_inactive = ImageIO.read(getClass().getResourceAsStream("/" + entity + "/right_inactive.png"));
+            left1 = ImageIO.read(getClass().getResourceAsStream("/entity/" + entityName + "/left1.png"));
+            left2 = ImageIO.read(getClass().getResourceAsStream("/entity/" + entityName + "/left2.png"));
+            left3 = ImageIO.read(getClass().getResourceAsStream("/entity/" + entityName + "/left3.png"));
+            left4 = ImageIO.read(getClass().getResourceAsStream("/entity/" + entityName + "/left4.png"));
+            left_inactive = ImageIO.read(getClass().getResourceAsStream("/entity/" + entityName + "/left_inactive.png"));
+            right1 = ImageIO.read(getClass().getResourceAsStream("/entity/" + entityName + "/right1.png"));
+            right2 = ImageIO.read(getClass().getResourceAsStream("/entity/" + entityName + "/right2.png"));
+            right3 = ImageIO.read(getClass().getResourceAsStream("/entity/" + entityName + "/right3.png"));
+            right4 = ImageIO.read(getClass().getResourceAsStream("/entity/" + entityName + "/right4.png"));
+            right_inactive = ImageIO.read(getClass().getResourceAsStream("/entity/" + entityName + "/right_inactive.png"));
         }catch(IOException e){
             e.printStackTrace();
         }

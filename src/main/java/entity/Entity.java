@@ -76,6 +76,7 @@ public class Entity {
             int rowIndex2 = (int) ((hitbox.getLeftWallLine().getY2() + velocityY) / gamePanel.getTileSize());
 
             if(tileManager.getTilesArray()[colIndex][rowIndex].isCollisional()) {
+                System.out.println(tileManager.getTilesArray()[colIndex][rowIndex].name);
                 return doLinesIntersects(
                         hitbox.getLeftWallLine().getX1(),
                         hitbox.getLeftWallLine().getY1(),
@@ -180,79 +181,48 @@ public class Entity {
         positionY += velY;
     }
 
-    /**
-     * Apply gravity to entity.
-     * @param deltaTime
-     */
+
     protected void applyGravity(double deltaTime){
-        System.out.println("velocityY: " + velocityY);
-        // If velocity is equal to 0, it means that entity is touching the floor
-        if(velocityY == 0){
-            int colIndex = (int) (hitbox.getLowerWallLine().getX1() / gamePanel.getTileSize());
-            int rowIndex = (int) ((hitbox.getLowerWallLine().getY1() + 1) / gamePanel.getTileSize());
-            Tile tile = tileManager.getTilesArray()[colIndex][rowIndex];
-            Tile decorationTile = tileManager.getDecorationsTilesArray()[colIndex][rowIndex];
+        int option = 0;
+        int rowIndex, rowIndex2;
 
-            int colIndex2 = (int) (hitbox.getLowerWallLine().getX2() / gamePanel.getTileSize());
-            int rowIndex2 = (int) ((hitbox.getLowerWallLine().getY2() + 1) / gamePanel.getTileSize());
-            Tile tile2 = tileManager.getTilesArray()[colIndex2][rowIndex2];
-            Tile decorationTile2 = tileManager.getDecorationsTilesArray()[colIndex2][rowIndex2];
-
-            // there is no tile below entity that is collisional, so increase positionY of entity
-            if(!tile.isCollisional() && !tile2.isCollisional() && (decorationTile == null || !decorationTile.isCollisional()) && (decorationTile2 == null || !decorationTile2.isCollisional())){
-                positionY += deltaTime * velocityY;
-                velocityY += deltaTime * gravityY;
-            }else if(tile.isCollisional()){
-                fallOnTheGround(hitbox.getLowerWallLine().getX1(), hitbox.getLowerWallLine().getY1(), colIndex, rowIndex, deltaTime, tileManager.getTilesArray());
-            }else if(tile2.isCollisional()){
-                fallOnTheGround(hitbox.getLowerWallLine().getX2(), hitbox.getLowerWallLine().getY2(), colIndex2, rowIndex2, deltaTime, tileManager.getTilesArray());
-            }else if(decorationTile != null && decorationTile.isCollisional()){
-                fallOnTheGround(hitbox.getLowerWallLine().getX1(), hitbox.getLowerWallLine().getY1(), colIndex, rowIndex, deltaTime, tileManager.getDecorationsTilesArray());
-            }else if(decorationTile2 != null && decorationTile2.isCollisional()){
-                fallOnTheGround(hitbox.getLowerWallLine().getX2(), hitbox.getLowerWallLine().getY2(), colIndex2, rowIndex2, deltaTime, tileManager.getDecorationsTilesArray());
-            }
+        if(velocityY == 0) {
+            rowIndex = (int) ((hitbox.getLowerWallLine().getY1() + 1) / gamePanel.getTileSize());
+            rowIndex2 = (int) ((hitbox.getLowerWallLine().getY2() + 1) / gamePanel.getTileSize());
         }else {
-            // if velocityY is not equal 0 then entity is in the air
-            // when in the air, velocityY < 0, which means that vector of velocityY is facing up
-            // when falling down, velocityY > 0, so we can calculate what tile is below entity and make it not exceed collisional tile
-            int colIndex = (int) (hitbox.getLowerWallLine().getX1() / gamePanel.getTileSize());
-            int rowIndex = (int) ((hitbox.getLowerWallLine().getY1() + velocityY) / gamePanel.getTileSize());
-            Tile tile = tileManager.getTilesArray()[colIndex][rowIndex];
-            Tile decorationTile = tileManager.getDecorationsTilesArray()[colIndex][rowIndex];
+            rowIndex = (int) ((hitbox.getLowerWallLine().getY1() + velocityY) / gamePanel.getTileSize());
+            rowIndex2 = (int) ((hitbox.getLowerWallLine().getY2() + velocityY) / gamePanel.getTileSize());
+            option = 2;
+        }
+        
+        int colIndex = (int) (hitbox.getLowerWallLine().getX1() / gamePanel.getTileSize());
+        int colIndex2 = (int) (hitbox.getLowerWallLine().getX2() / gamePanel.getTileSize());
 
-            int colIndex2 = (int) (hitbox.getLowerWallLine().getX2() / gamePanel.getTileSize());
-            int rowIndex2 = (int) ((hitbox.getLowerWallLine().getY2() + velocityY) / gamePanel.getTileSize());
-            Tile tile2 = tileManager.getTilesArray()[colIndex2][rowIndex2];
-            Tile decorationTile2 = tileManager.getDecorationsTilesArray()[colIndex2][rowIndex2];
+        Tile tile = tileManager.getTilesArray()[colIndex][rowIndex];
+        Tile decorationTile = tileManager.getDecorationsTilesArray()[colIndex][rowIndex];
+        Tile tile2 = tileManager.getTilesArray()[colIndex2][rowIndex2];
+        Tile decorationTile2 = tileManager.getDecorationsTilesArray()[colIndex2][rowIndex2];
 
-            // there is no tile below entity that is collisional, so increase positionY of entity
-            if(!tile.isCollisional() && !tile2.isCollisional() && (decorationTile == null || !decorationTile.isCollisional()) && (decorationTile2 == null || !decorationTile2.isCollisional())) {
-                positionY += deltaTime * velocityY;
-                velocityY += deltaTime * gravityY;
-            }else if(tile.isCollisional()) {
-                fallOnTheGround(hitbox.getLowerWallLine().getX1(), hitbox.getLowerWallLine().getY1(), colIndex, rowIndex, deltaTime, tileManager.getTilesArray());
-            }else if(tile2.isCollisional()) {
-                fallOnTheGround(hitbox.getLowerWallLine().getX2(), hitbox.getLowerWallLine().getY2(), colIndex2, rowIndex2, deltaTime, tileManager.getTilesArray());
+        if(!tile.isCollisional() && !tile2.isCollisional() && (decorationTile == null || !decorationTile.isCollisional()) && (decorationTile2 == null || !decorationTile2.isCollisional())){
+            positionY += deltaTime * velocityY;
+            velocityY += deltaTime * gravityY;
+        }else if(tile.isCollisional()){
+            fallOnTheGround(hitbox.getLowerWallLine().getX1(), hitbox.getLowerWallLine().getY1(), colIndex, rowIndex, deltaTime, tileManager.getTilesArray());
+        }else if(tile2.isCollisional()){
+            fallOnTheGround(hitbox.getLowerWallLine().getX2(), hitbox.getLowerWallLine().getY2(), colIndex2, rowIndex2, deltaTime, tileManager.getTilesArray());
+            if(option == 2) {
                 positionX -= hitbox.getUpperWallLine().getX2() - hitbox.getUpperWallLine().getX1();
-            }else if(decorationTile != null && decorationTile.isCollisional()){
-                fallOnTheGround(hitbox.getLowerWallLine().getX1(), hitbox.getLowerWallLine().getY1(), colIndex, rowIndex, deltaTime, tileManager.getDecorationsTilesArray());
-            }else if(decorationTile2 != null && decorationTile2.isCollisional()){
-                fallOnTheGround(hitbox.getLowerWallLine().getX2(), hitbox.getLowerWallLine().getY2(), colIndex2, rowIndex2, deltaTime, tileManager.getDecorationsTilesArray());
+            }
+        }else if(decorationTile != null && decorationTile.isCollisional()){
+            fallOnTheGround(hitbox.getLowerWallLine().getX1(), hitbox.getLowerWallLine().getY1(), colIndex, rowIndex, deltaTime, tileManager.getDecorationsTilesArray());
+        }else if(decorationTile2 != null && decorationTile2.isCollisional()){
+            fallOnTheGround(hitbox.getLowerWallLine().getX2(), hitbox.getLowerWallLine().getY2(), colIndex2, rowIndex2, deltaTime, tileManager.getDecorationsTilesArray());
+            if(option == 2) {
                 positionX -= hitbox.getUpperWallLine().getX2() - hitbox.getUpperWallLine().getX1();
             }
         }
     }
 
-    /**
-     * Calculate the intersection of two lines.
-     * One line is a vector of velocityY from entity and the second line is the upper line of a tile.
-     * @param x1
-     * @param y1
-     * @param colIndex
-     * @param rowIndex
-     * @param deltaTime
-     * @param arr
-     */
     private void fallOnTheGround(double x1, double y1, int colIndex, int rowIndex, double deltaTime, Tile[][] arr){
         double x2 = x1;
         double y2 = y1 + (deltaTime * velocityY);
@@ -276,38 +246,28 @@ public class Entity {
         }
     }
 
-    public void setVelocityX(double velocityX){
-        this.velocityX = velocityX;
-    }
-
-    public double getVelocityX(){
-        return velocityX;
-    }
-
-    public void setVelocityY(double velocityY){
-        this.velocityY = velocityY;
-    }
-
-    public double getVelocityY(){
-        return velocityY;
-    }
-
-    public void setPositionX(double positionX){
-        this.positionX = positionX;
-    }
-
-    public double getPositionX(){
+    public double getPositionX() {
         return positionX;
     }
 
-    public void setPositionY(double positionY){
-        this.positionY = positionY;
+    public void setPositionX(double positionX) {
+        this.positionX = positionX;
     }
-
-    public double getPositionY(){
+    
+    public double getPositionY() {
         return positionY;
     }
 
+    public void setPositionY(double positionY) {
+        this.positionY = positionY;
+    }
 
+    public HitBox getHitbox() {
+        return hitbox;
+    }
+
+    public void setHitbox(HitBox hitbox) {
+        this.hitbox = hitbox;
+    }
 }
 
