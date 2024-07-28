@@ -17,40 +17,38 @@ public class Ball extends Entity {
     private final int maximumNumberOfStepsAllowedFromBouncingBack = 40;
 
     public Ball(TileManagerGame tileManager, Player player, double positionX, double positionY) {
-        super(tileManager);
+        super(tileManager, positionX, positionY);
         try {
-            image = ImageIO.read(getClass().getResourceAsStream("/entity/ball.png"));
+            setImage(ImageIO.read(getClass().getResourceAsStream("/entity/ball.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         this.player = player;
-        this.positionX = positionX;
-        this.positionY = positionY;
-        width = image.getWidth(null);
-        height = image.getHeight(null);
+        setWidth(getImage().getWidth(null));
+        setHeight(getImage().getHeight(null));
 
         enteredTheDoor = false;
         updateHitBox();
     }
 
     public void update(double deltaTime) {
-        this.applyGravity(deltaTime);
+        applyGravity(deltaTime);
         performMovementIfTouchedByPlayer();
         checkIfIsOnTheFloor();
-        jumpedOn(deltaTime);
+        //jumpedOn(deltaTime);
         updateHitBox();
     }
 
     public void updateHitBox() {
-        double x1 = this.positionX;
-        double x2 = this.positionX + width - 1;
-        double y1 = this.positionY;
-        double y2 = this.positionY + height - 1;
-        this.hitbox.setLeftWallLine(new Vector(x1, y1, x1, y2));
-        this.hitbox.setRightWallLine(new Vector(x2, y1, x2, y2));
-        this.hitbox.setUpperWallLine(new Vector(x1, y1, x2, y1));
-        this.hitbox.setLowerWallLine(new Vector(x1, y2, x2, y2));
+        double x1 = getPositionX();
+        double x2 = getPositionX() + getWidth() - 1;
+        double y1 = getPositionY();
+        double y2 = getPositionY() + getHeight() - 1;
+        getHitbox().setLeftWallLine(new Vector(x1, y1, x1, y2));
+        getHitbox().setRightWallLine(new Vector(x2, y1, x2, y2));
+        getHitbox().setUpperWallLine(new Vector(x1, y1, x2, y1));
+        getHitbox().setLowerWallLine(new Vector(x1, y2, x2, y2));
     }
 
     private void performMovementIfTouchedByPlayer() {
@@ -64,10 +62,10 @@ public class Ball extends Entity {
         double y1 = player.getHitbox().getLowerWallLine().getY2();
         double x2 = x1 + 1;
         double y2 = y1;
-        double x3 = hitbox.getLeftWallLine().getX1();
-        double y3 = hitbox.getLeftWallLine().getY1();
-        double x4 = hitbox.getLeftWallLine().getX2();
-        double y4 = hitbox.getLeftWallLine().getY2();
+        double x3 = getHitbox().getLeftWallLine().getX1();
+        double y3 = getHitbox().getLeftWallLine().getY1();
+        double x4 = getHitbox().getLeftWallLine().getX2();
+        double y4 = getHitbox().getLeftWallLine().getY2();
 
         return calculateIfBallGotTouched(x1, y1, x2, y2, x3, y3, x4, y4, "left", 2);
     }
@@ -77,10 +75,10 @@ public class Ball extends Entity {
         double y1 = player.getHitbox().getLowerWallLine().getY1();
         double x2 = x1 - 1;
         double y2 = y1;
-        double x3 = hitbox.getRightWallLine().getX1();
-        double y3 = hitbox.getRightWallLine().getY1();
-        double x4 = hitbox.getRightWallLine().getX2();
-        double y4 = hitbox.getRightWallLine().getY2();
+        double x3 = getHitbox().getRightWallLine().getX1();
+        double y3 = getHitbox().getRightWallLine().getY1();
+        double x4 = getHitbox().getRightWallLine().getX2();
+        double y4 = getHitbox().getRightWallLine().getY2();
 
         return calculateIfBallGotTouched(x1, y1, x2, y2, x3, y3, x4, y4, "right", -2);
     }
@@ -103,50 +101,29 @@ public class Ball extends Entity {
     }
 
     private void checkIfIsOnTheFloor() {
-        int colIndex = (int) (hitbox.getLowerWallLine().getX1() / GamePanel.TILE_SIZE);
-        int rowIndex = (int) ((hitbox.getLowerWallLine().getY1() + 1) / GamePanel.TILE_SIZE);
+        int colIndex = (int) (getHitbox().getLowerWallLine().getX1() / GamePanel.TILE_SIZE);
+        int rowIndex = (int) ((getHitbox().getLowerWallLine().getY1() + 1) / GamePanel.TILE_SIZE);
 
-        int colIndex2 = (int) (hitbox.getLowerWallLine().getX2() / GamePanel.TILE_SIZE);
-        int rowIndex2 = (int) ((hitbox.getLowerWallLine().getY2() + 1) / GamePanel.TILE_SIZE);
+        int colIndex2 = (int) (getHitbox().getLowerWallLine().getX2() / GamePanel.TILE_SIZE);
+        int rowIndex2 = (int) ((getHitbox().getLowerWallLine().getY2() + 1) / GamePanel.TILE_SIZE);
 
-        if(!tileManager.getTilesArray()[colIndex][rowIndex].isCollisional() && !tileManager.getTilesArray()[colIndex2][rowIndex2].isCollisional()){
+        if(!getTileManager().getTilesArray()[colIndex][rowIndex].isCollisional() && !getTileManager().getTilesArray()[colIndex2][rowIndex2].isCollisional()){
             bounceBackFromHittingAWall = false;
         }
 
-        isOnTheFloor = tileManager.getTilesArray()[colIndex][rowIndex].isCollisional() || tileManager.getTilesArray()[colIndex2][rowIndex2].isCollisional();
+        isOnTheFloor = getTileManager().getTilesArray()[colIndex][rowIndex].isCollisional() || getTileManager().getTilesArray()[colIndex2][rowIndex2].isCollisional();
     }
 
-    private boolean isOnTheFloor(int colIndex, int rowIndex, Tile[][] arr){
-        double x1 = hitbox.getLowerWallLine().getX1();
-        double y1 = hitbox.getLowerWallLine().getY1();
-        double x2 = x1;
-        double y2 = y1 + 0.1;
-        double x3 = arr[colIndex][rowIndex].getUpperWallLine().getX1();
-        double y3 = arr[colIndex][rowIndex].getUpperWallLine().getY1();
-        double x4 = arr[colIndex][rowIndex].getUpperWallLine().getX2();
-        double y4 = arr[colIndex][rowIndex].getUpperWallLine().getY2();
-
-        double divider = (x4 - x3) * (y2 - y1) - (y4 - y3) * (x2 - x1);
-
-        if(divider != 0) {
-            double alpha = ((x4 - x3) * (y3 - y1) - (y4 - y3) * (x3 - x1)) / divider;
-            double beta = ((x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1)) / divider;
-            if (alpha >= 0 && alpha <= 1 && beta >= 0 && beta <= 1) {
-                return true;
-            }
-        }
-        return false;
-
-    }
+    /*
     private void jumpedOn(double deltaTime){
-        double x1 = player.positionX + (double) player.width /2;
-        double y1 = player.positionY + player.height - 1;
-        double x2 = x1 + (deltaTime * player.velocityX);
-        double y2 = y1 + (deltaTime * player.velocityY);
-        double x3 = positionX;
-        double y3 = positionY;
-        double x4 = positionX + width - 1;
-        double y4 = positionY;
+        double x1 = player.getPositionX() + (double) player.getWidth() /2;
+        double y1 = player.getPositionY() + player.getHeight() - 1;
+        double x2 = x1 + (deltaTime * player.getVelocityX());
+        double y2 = y1 + (deltaTime * player.getVelocityY());
+        double x3 = getPositionX();
+        double y3 = getPositionY();
+        double x4 = getPositionX() + getWidth() - 1;
+        double y4 = getPositionY();
 
         double divider = (x4 - x3) * (y2 - y1) - (y4 - y3) * (x2 - x1);
         if(divider != 0){
@@ -154,22 +131,22 @@ public class Ball extends Entity {
             double beta = ((x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1)) / divider;
 
             if(alpha >= 0 && alpha <= 1 && beta >= 0 && beta <= 1){
-                player.velocityX = 0;
-                player.velocityY = -3 - 0.5 * player.velocityY;
+                player.setVelocityX(0);
+                player.setVelocityY(-3 - 0.5 * player.getVelocityY());
             }
         }
-    }
+    }*/
 
     public void draw(Graphics2D g2d){
         if(!enteredTheDoor) {
             if(bounceBackFromHittingAWall && isOnTheFloor) {
                 System.out.println("touched and on the floor");
                 if(bounceBackFromHittingAWallDirection.equals("right")){
-                    this.positionX += 6;
+                    setPositionX(getPositionX() + 6);
                 }else if(bounceBackFromHittingAWallDirection.equals("left")){
-                    this.positionX -= 6;
+                    setPositionX(getPositionX() - 6);
                 }
-                this.numberOfStepsTakenFromBouncingBack += 6;
+                numberOfStepsTakenFromBouncingBack += 6;
 
                 if(numberOfStepsTakenFromBouncingBack >= maximumNumberOfStepsAllowedFromBouncingBack){
                     numberOfStepsTakenFromBouncingBack = 0;
@@ -177,18 +154,8 @@ public class Ball extends Entity {
                 }
 
             }
-            g2d.drawImage(image, (int) positionX, (int) positionY, width, height, null);
-            g2d.setColor(Color.GREEN);
-            g2d.fillRect((int) this.hitbox.getLeftWallLine().getX1(), (int) this.hitbox.getLeftWallLine().getY1(), (int) (this.hitbox.getUpperWallLine().getX2() - this.hitbox.getUpperWallLine().getX1()),  (int) (this.hitbox.getRightWallLine().getY2() - this.hitbox.getLeftWallLine().getY1()));
+            g2d.drawImage(getImage(), (int) getPositionX(), (int) getPositionY(), getWidth(), getHeight(), null);
         }
-    }
-
-    public double getPositionX(){
-        return positionX;
-    }
-
-    public double getPositionY(){
-        return positionY;
     }
 
     public void setEnteredTheDoor(boolean enteredTheDoor){

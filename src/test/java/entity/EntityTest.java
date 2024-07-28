@@ -4,11 +4,7 @@ import main.GamePanel;
 import main.KeyHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import tiles.Tile;
 import tiles.TileManagerGame;
-import tiles.TileManagerMenu;
-
-import java.sql.SQLOutput;
 
 import static org.junit.jupiter.api.Assertions.*;
 

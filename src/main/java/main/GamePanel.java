@@ -33,10 +33,10 @@ public class GamePanel extends JPanel implements Runnable{
     GameLevelsManager gameLevelsManager = new GameLevelsManager(this, tileManagerGame);
 
     public GamePanel(){
-        this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
-        this.setLayout(null);
-        this.addKeyListener(keyHandler);
-        this.setFocusable(true);
+        setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
+        setLayout(null);
+        addKeyListener(keyHandler);
+        setFocusable(true);
 
         gameThread = new Thread(this);
         gameThread.start();

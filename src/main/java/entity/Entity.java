@@ -7,22 +7,24 @@ import tiles.TileManagerGame;
 import java.awt.*;
 
 public class Entity {
-    protected double positionX, positionY, velocityX, velocityY;
-    protected float gravityX, gravityY;
-    protected int height, width;
-    protected Image image;
-    protected String direction;
-    protected TileManagerGame tileManager;
-    protected HitBox hitbox;
-    protected int padding;
+    private double positionX, positionY, velocityX, velocityY;
+    private float gravityX, gravityY;
+    private int height, width;
+    private Image image;
+    private String direction;
+    private TileManagerGame tileManager;
+    private HitBox hitbox;
+    private int padding;
 
-    Entity(TileManagerGame tileManager){
+    Entity(TileManagerGame tileManager, double positionX, double positionY){
         this.tileManager = tileManager;
-        this.hitbox = new HitBox();
+        hitbox = new HitBox();
         velocityX = 0;
         velocityY = 0;
         gravityX = 0;
         gravityY = 0.2f;
+        this.positionX = positionX;
+        this.positionY = positionY;
     }
 
 
@@ -266,6 +268,86 @@ public class Entity {
 
     public void setHitbox(HitBox hitbox) {
         this.hitbox = hitbox;
+    }
+
+    public double getVelocityX() {
+        return velocityX;
+    }
+
+    public void setVelocityX(double velocityX) {
+        this.velocityX = velocityX;
+    }
+
+    public double getVelocityY() {
+        return velocityY;
+    }
+
+    public void setVelocityY(double velocityY) {
+        this.velocityY = velocityY;
+    }
+
+    public float getGravityX() {
+        return gravityX;
+    }
+
+    public void setGravityX(float gravityX) {
+        this.gravityX = gravityX;
+    }
+
+    public float getGravityY() {
+        return gravityY;
+    }
+
+    public void setGravityY(float gravityY) {
+        this.gravityY = gravityY;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+    }
+
+    public String getDirection() {
+        return direction;
+    }
+
+    public void setDirection(String direction) {
+        this.direction = direction;
+    }
+
+    public TileManagerGame getTileManager() {
+        return tileManager;
+    }
+
+    public void setTileManager(TileManagerGame tileManager) {
+        this.tileManager = tileManager;
+    }
+
+    public int getPadding() {
+        return padding;
+    }
+
+    public void setPadding(int padding) {
+        this.padding = padding;
     }
 }
 
