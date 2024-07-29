@@ -105,28 +105,6 @@ public class Player extends Entity{
         }
     }
 
-    private void jumpedOn(double deltaTime){
-        double x1 = player.getPositionX() + (double) player.getWidth() /2;
-        double y1 = player.getPositionY() + player.getHeight() - 1;
-        double x2 = x1 + (deltaTime * player.getVelocityX());
-        double y2 = y1 + (deltaTime * player.getVelocityY());
-        double x3 = ball.getPositionX();
-        double y3 = ball.getPositionY();
-        double x4 = ball.getPositionX() + getWidth() - 1;
-        double y4 = ball.getPositionY();
-
-        double divider = (x4 - x3) * (y2 - y1) - (y4 - y3) * (x2 - x1);
-        if(divider != 0){
-            double alpha = ((x4 - x3) * (y3 - y1) - (y4 - y3) * (x3 - x1)) / divider;
-            double beta = ((x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1)) / divider;
-
-            if(alpha >= 0 && alpha <= 1 && beta >= 0 && beta <= 1){
-                setVelocityX(0);
-                setVelocityY(-3 - 0.5 * getVelocityY());
-            }
-        }
-    }
-
     private void checkForCeilingCollision(double deltaTime) {
         int colIndex = (int) (getHitbox().getUpperWallLine().getX1() / GamePanel.TILE_SIZE);
         int rowIndex = (int) ((getHitbox().getUpperWallLine().getY1() + getVelocityY()) / GamePanel.TILE_SIZE);

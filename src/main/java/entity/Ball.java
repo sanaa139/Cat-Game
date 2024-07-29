@@ -36,7 +36,7 @@ public class Ball extends Entity {
         applyGravity(deltaTime);
         performMovementIfTouchedByPlayer();
         checkIfIsOnTheFloor();
-        //jumpedOn(deltaTime);
+        jumpedOn(deltaTime);
         updateHitBox();
     }
 
@@ -114,7 +114,7 @@ public class Ball extends Entity {
         isOnTheFloor = getTileManager().getTilesArray()[colIndex][rowIndex].isCollisional() || getTileManager().getTilesArray()[colIndex2][rowIndex2].isCollisional();
     }
 
-    /*
+
     private void jumpedOn(double deltaTime){
         double x1 = player.getPositionX() + (double) player.getWidth() /2;
         double y1 = player.getPositionY() + player.getHeight() - 1;
@@ -135,7 +135,7 @@ public class Ball extends Entity {
                 player.setVelocityY(-3 - 0.5 * player.getVelocityY());
             }
         }
-    }*/
+    }
 
     public void draw(Graphics2D g2d){
         if(!enteredTheDoor) {

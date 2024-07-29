@@ -46,7 +46,7 @@ public class GameLevelsManager {
         }
 
         if(levelCleared || currentLevel == null){
-            if(currentLevelNum == 2){
+            if(currentLevelNum == 3){
                 gamePanel.setState(GamePanel.GameState.MENU);
                 gamePanel.menu.playButton.setVisible(true);
                 currentLevel = null;
