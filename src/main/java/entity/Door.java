@@ -1,70 +1,42 @@
 package entity;
 
-import tiles.TileManagerGame;
-import tiles.Vector;
-
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.io.IOException;
-import java.util.Objects;
 
 public class Door extends Entity{
-    private Image[] sprites;
-    private Ball[] ballsArray;
+    private final Image[] sprites;
     private int counter;
     private boolean closed;
-    public Door(TileManagerGame tileManager, Ball[] ballsArray, double positionX, double positionY){
-        super(tileManager, positionX, positionY);
-        this.ballsArray = ballsArray;
+    public Door(double positionX, double positionY, int width, int height, int padding, boolean isCollidable) {
+        super(positionX, positionY, width, height, padding, isCollidable);
 
         sprites = new Image[4];
         loadSprites();
         setImage(sprites[0]);
-        setWidth(getImage().getWidth(null));
-        setHeight(getImage().getHeight(null));
 
-        setPadding(13);
-        updateHitbox();
+        updateHitBox();
+        setDrawingPriority(2);
+        setName("Door");
     }
 
-    public void update(){
-        for(Ball ball : ballsArray){
-            if(ball != null) {
-                if (((ball.getPositionX() >= getHitbox().getLeftWallLine().getX1() && ball.getPositionX() < getHitbox().getRightWallLine().getX1()) ||
-                        (ball.getPositionX() <= getHitbox().getRightWallLine().getX1() && ball.getPositionX() > getHitbox().getLeftWallLine().getX1()))
-                        && ball.getPositionY() >= getHitbox().getUpperWallLine().getY1()) {
-                    ball.setPositionX(400);
-                    ball.setPositionY(0);
-                    ball.setEnteredTheDoor(true);
-                    closed = true;
-                }
-            }
-        }
+    @Override
+    public void update(double deltaTime) {}
+
+    @Override
+    public void restart(){
+        super.restart();
+        closed = false;
+        setImage(sprites[0]);
     }
 
-    private void updateHitbox(){
-        double x1 = getPositionX() + getPadding();
-        double x2 = getPositionX() + getWidth() - 1 - getPadding();
-        double y1 = getPositionY() + getPadding() * 2;
-        double y2 = getPositionY() + getHeight() - 1;
-        getHitbox().setLeftWallLine(new Vector(x1, y1, x1, y2));
-        getHitbox().setRightWallLine(new Vector(x2, y1, x2, y2));
-        getHitbox().setUpperWallLine(new Vector(x1, y1, x2, y1));
-        getHitbox().setLowerWallLine(new Vector(x1, y2, x2, y2));
-    }
-
-    private void loadSprites(){
-        Image img;
+    @Override
+    protected void loadSprites(){
         for(int i = 1; i <= sprites.length; i++){
-            try {
-                img = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/entity/doors/door" + i + ".png")));
-                sprites[i-1] = img;
-            }catch (IOException e){
-                e.printStackTrace();
-            }
+            sprites[i-1] = loadSprite("entity", "door", "door" + i, "png");
         }
     }
 
+
+    @Override
     public void draw(Graphics2D g2d){
         if(closed) {
             if (counter >= 10) {
@@ -78,11 +50,16 @@ public class Door extends Entity{
                 counter = 0;
             }
         }
+
         g2d.drawImage(getImage(), (int)getPositionX(), (int)getPositionY(), getWidth(), getHeight(), null);
         counter++;
     }
 
     public boolean isClosed(){
         return closed;
+    }
+
+    public void setClosed(boolean closed){
+        this.closed = closed;
     }
 }

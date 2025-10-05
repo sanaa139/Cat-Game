@@ -1,117 +1,76 @@
 package tiles;
 
+import entity.LoadImagesManager;
 import main.GamePanel;
 
-import javax.swing.text.Position;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class Tile {
-    private Image image;
-    private boolean collisional;
-    private final Vector position;
-    private final int height, width;
-    private final Vector upperWallLine, rightWallLine, lowerWallLine, leftWallLine;
-    public String name;
+    private final Image image;
+    private final int width, height;
+    private final String name;
 
-    public Tile(Image image, boolean collisional, String name){
+    private boolean isCollidable;
+    private Rectangle hitbox;
+
+    public Tile(Image image, boolean isCollidable, String name, int height, int width){
         this.image = image;
-        position = new Vector();
-        this.collisional = collisional;
-
-        this.name = name;
-        height = GamePanel.TILE_SIZE;
-        width = GamePanel.TILE_SIZE;
-
-        upperWallLine = new Vector();
-        rightWallLine = new Vector();
-        leftWallLine = new Vector();
-        lowerWallLine = new Vector();
-    }
-
-    public Tile(Image image, boolean collisional, String name, int height, int width){
-        this.image = image;
-        position = new Vector();
-        this.collisional = collisional;
+        this.isCollidable = isCollidable;
 
         this.name = name;
         this.height = height;
         this.width = width;
 
-        upperWallLine = new Vector();
-        rightWallLine = new Vector();
-        leftWallLine = new Vector();
-        lowerWallLine = new Vector();
+        hitbox = new Rectangle(width, height);
+    }
+
+    public static Tile empty(String name, boolean isCollidable, int height, int width) {
+        BufferedImage emptyImage = LoadImagesManager.createPlaceholderImage(Color.WHITE);
+        return new Tile(emptyImage, isCollidable, name, height, width);
+    }
+
+    public Tile(Tile tile) {
+        this(tile.image, tile.isCollidable, tile.name, tile.height, tile.width);
+    }
+
+    public void setPosition(int posX, int posY){
+        hitbox.setLocation(posX, posY);
     }
 
     public Image getImage(){
         return image;
     }
 
-    public void setImage(Image image){
-        this.image = image;
-    }
-
-    public boolean isCollisional(){
-        return collisional;
-    }
-
-    public void setCollisional(boolean collisional){
-        this.collisional = collisional;
-    }
-
-    public void setPosition(int posX, int posY){
-        position.setX1(posX);
-        position.setY1(posY);
-
-        upperWallLine.setX1(position.getX1());
-        upperWallLine.setY1(position.getY1());
-        upperWallLine.setX2(position.getX1() + width - 1);
-        upperWallLine.setY2(position.getY1());
-
-        rightWallLine.setX1(position.getX1() + width - 1);
-        rightWallLine.setY1(position.getY1());
-        rightWallLine.setX2(position.getX1() + width - 1);
-        rightWallLine.setY2(position.getY1() + height - 1);
-
-        leftWallLine.setX1(position.getX1());
-        leftWallLine.setY1(position.getY1());
-        leftWallLine.setX2(position.getX1());
-        leftWallLine.setY2(position.getY1() + height - 1);
-
-        lowerWallLine.setX1(position.getX1());
-        lowerWallLine.setY1(position.getY1() + height - 1);
-        lowerWallLine.setX2(position.getX1() + width - 1);
-        lowerWallLine.setY2(position.getY1() + height - 1);
-    }
-
-    public Vector getUpperWallLine(){
-        return upperWallLine;
-    }
-
-    public Vector getRightWallLine(){
-        return rightWallLine;
-    }
-
-    public Vector getLeftWallLine(){
-        return leftWallLine;
-    }
-    public Vector getLowerWallLine(){
-        return lowerWallLine;
-    }
-
-    public Vector getPosition(){
-        return position;
+    public int getWidth(){
+        return width;
     }
 
     public int getHeight(){
         return height;
     }
 
-    public int getWidth(){
-        return width;
+    public String getName(){
+        return name;
     }
 
-    public Tile copy() {
-        return new Tile(image, collisional, name, height, width);
+    public boolean isCollidable(){
+        return isCollidable;
+    }
+
+    public void setIsCollidable(boolean isCollidable){
+        this.isCollidable = isCollidable;
+    }
+
+    public Rectangle getPosition(){
+        return hitbox;
+    }
+
+    public Rectangle getHitbox() {
+        return hitbox;
+    }
+
+    public void setHitbox(Rectangle hitbox) {
+        this.hitbox = hitbox;
     }
 }

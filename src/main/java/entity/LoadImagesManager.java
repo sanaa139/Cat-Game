@@ -1,61 +1,45 @@
 package entity;
 
+import main.GamePanel;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class LoadImagesManager {
-    private Image left1, left2, left3, left4, left_inactive, right1, right2, right3, right4, right_inactive;
-    LoadImagesManager(String entityName){
-        try{
-            left1 = ImageIO.read(getClass().getResourceAsStream("/entity/" + entityName + "/left1.png"));
-            left2 = ImageIO.read(getClass().getResourceAsStream("/entity/" + entityName + "/left2.png"));
-            left3 = ImageIO.read(getClass().getResourceAsStream("/entity/" + entityName + "/left3.png"));
-            left4 = ImageIO.read(getClass().getResourceAsStream("/entity/" + entityName + "/left4.png"));
-            left_inactive = ImageIO.read(getClass().getResourceAsStream("/entity/" + entityName + "/left_inactive.png"));
-            right1 = ImageIO.read(getClass().getResourceAsStream("/entity/" + entityName + "/right1.png"));
-            right2 = ImageIO.read(getClass().getResourceAsStream("/entity/" + entityName + "/right2.png"));
-            right3 = ImageIO.read(getClass().getResourceAsStream("/entity/" + entityName + "/right3.png"));
-            right4 = ImageIO.read(getClass().getResourceAsStream("/entity/" + entityName + "/right4.png"));
-            right_inactive = ImageIO.read(getClass().getResourceAsStream("/entity/" + entityName + "/right_inactive.png"));
-        }catch(IOException e){
-            e.printStackTrace();
+public class LoadImagesManager{
+    public static Image loadImage(String baseFolder, String subFolder, String fileName, String fileExtension) throws IOException {
+        String path = "/" + baseFolder + "/" + subFolder + "/" + fileName + "."  + fileExtension;
+        var stream = LoadImagesManager.class.getResourceAsStream(path);
+        if (stream == null) {
+            throw new FileNotFoundException("Resource not found: " + path);
         }
+        return ImageIO.read(stream);
     }
 
-    public Image getLeft1(){
-        return left1;
-    }
+    public static BufferedImage createPlaceholderImage(Color backgroundColor) {
+        int width = GamePanel.TILE_SIZE, height = GamePanel.TILE_SIZE;
+        BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = img.createGraphics();
 
-    public Image getLeft2(){
-        return left2;
-    }
-    public Image getLeft3(){
-        return left3;
-    }
-    public Image getLeft4(){
-        return left4;
-    }
+        g2d.setColor(backgroundColor);
+        g2d.fillRect(0, 0, width, height);
 
-    public Image getLeftInactive(){
-        return left_inactive;
-    }
+        g2d.setColor(Color.BLACK);
+        g2d.setFont(new Font("Arial", Font.BOLD, 12));
 
-    public Image getRight1(){
-        return right1;
-    }
+        String text = "?";
+        FontMetrics fm = g2d.getFontMetrics();
+        int textWidth = fm.stringWidth(text);
+        int textHeight = fm.getAscent();
 
-    public Image getRight2(){
-        return right2;
-    }
-    public Image getRight3(){
-        return right3;
-    }
-    public Image getRight4(){
-        return right4;
-    }
+        int x = (width - textWidth) / 2;
+        int y = (height + textHeight) / 2;
 
-    public Image getRightInactive(){
-        return right_inactive;
+        g2d.drawString(text, x, y);
+
+        g2d.dispose();
+        return img;
     }
 }

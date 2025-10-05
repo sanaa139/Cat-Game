@@ -1,64 +1,53 @@
 package main;
 
-import tiles.Tile;
-import tiles.TileManagerMenu;
+import tiles.TileManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 public class Menu {
-    public JButton playButton;
-    private TileManagerMenu tileManagerMenu;
+    private final TileManager tileManager;
+    private boolean isPlayButtonClicked;
+    private final Button playButton;
 
-    public Menu(GamePanel gamePanel){
-        this.tileManagerMenu = new TileManagerMenu();
-        createPLayButton(gamePanel);
-    }
+    public Menu(GamePanel gamePanel, TileManager tileManager){
+        this.tileManager = tileManager;
 
-    private void createPLayButton(GamePanel gamePanel){
-        playButton = new JButton("PLAY");
-        int buttonWidth = 100;
-        int buttonHeight = 50;
-        playButton.setBounds(GamePanel.SCREEN_WIDTH / 2 - buttonWidth / 2, GamePanel.SCREEN_HEIGHT / 2 - buttonHeight / 2, buttonWidth, buttonHeight);
-        playButton.setFont(new Font("Serif",Font.BOLD,20));
-        playButton.setBackground(new Color(255,128,0));
-        playButton.setFocusPainted(false);
-        playButton.setBorderPainted(false);
-        gamePanel.add(playButton);
-        playButton.setVisible(true);
-        playButton.addMouseListener(new MouseListener() {
+        int buttonWidth = 120;
+        int buttonHeight = 60;
+        int buttonX = GamePanel.SCREEN_WIDTH / 2 - buttonWidth / 2;
+        int buttonY = GamePanel.SCREEN_HEIGHT / 2 - buttonHeight / 2;
+
+        playButton = new Button(buttonX, buttonY, buttonWidth, buttonHeight, "PLAY", 28);
+
+
+        gamePanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                playButton.setVisible(false);
-                gamePanel.buttonClicked = true;
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-
+                if (playButton.getButtonBounds().contains(e.getPoint())) {
+                    isPlayButtonClicked = true;
+                }
             }
         });
     }
 
-    public TileManagerMenu getTileManagerMenu(){
-        return tileManagerMenu;
+    public void draw(Graphics2D g2d) {
+        tileManager.draw(g2d);
+        playButton.drawButton(g2d);
     }
 
+
+    public boolean isPlayButtonClicked(){
+        return isPlayButtonClicked;
+    }
+
+    public void setPlayButtonClicked(boolean isPlayButtonClicked){
+        this.isPlayButtonClicked = isPlayButtonClicked;
+    }
+
+    public TileManager getTileManager(){
+        return tileManager;
+    }
 }
