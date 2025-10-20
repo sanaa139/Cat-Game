@@ -1,10 +1,8 @@
 package entity;
 
 import main.Drawable;
-import main.GamePanel;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.logging.Logger;
 

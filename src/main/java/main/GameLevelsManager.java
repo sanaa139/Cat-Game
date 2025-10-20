@@ -1,38 +1,54 @@
 package main;
 
 import entity.*;
-import tiles.TileManager;
+import tiles.TiledMapLoader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
+import java.util.logging.Logger;
 
 public class GameLevelsManager {
     private final GamePanel gamePanel;
-    private final TileManager tileManager;
     private final KeyHandler keyHandler;
     private GameLevel currentLevel;
-    private int currentLevelNum;
+    private int currentLevelNum = -1;
+    private final ArrayList<GameLevel> levels;
 
-    public GameLevelsManager(GamePanel gamePanel, TileManager tileManager, KeyHandler keyHandler) {
+    public GameLevelsManager(GamePanel gamePanel, KeyHandler keyHandler) {
         this.gamePanel = gamePanel;
-        this.tileManager = tileManager;
         this.keyHandler = keyHandler;
+
+        levels = loadLevels();
     }
 
-    public TileManager getTileManager() {
-        return tileManager;
+    private ArrayList<GameLevel> loadLevels(){
+        ArrayList<GameLevel> levels = new ArrayList<>();
+
+        List<Supplier<GameLevel>> levelSuppliers = List.of(
+                this::createLevel1,
+                this::createLevel2,
+                this::createLevel3
+        );
+
+        for (int i = 0; i < levelSuppliers.size(); i++) {
+            try {
+                GameLevel level = levelSuppliers.get(i).get();
+                levels.add(level);
+                Logger.getLogger(getClass().getName()).info("Added Level " + (i + 1));
+            } catch (IllegalStateException | IllegalArgumentException e ) {
+                Logger.getLogger(getClass().getName())
+                        .severe("Failed to create Level " + (i + 1) + ": " + e.getMessage());
+            }
+        }
+
+        return levels;
     }
+
 
     private void loadNextLevel() {
         currentLevelNum++;
-        switch (currentLevelNum) {
-            case 1:
-                currentLevel = createMap1();
-                break;
-            case 2:
-                currentLevel = createMap2();
-                break;
-            case 3:
-                currentLevel = createMap3();
-                break;
-        }
+        currentLevel = levels.get(currentLevelNum);
+        restartCurrentLevel();
     }
 
     public void checkIfLevelWasCleared() {
@@ -48,15 +64,12 @@ public class GameLevelsManager {
             }
         }
 
-        if(levelCleared || currentLevel == null){
-            if(currentLevelNum == 3){
-                gamePanel.setState(GamePanel.GameState.MENU);
-                //gamePanel.menu.getPlayButton().setVisible(true);
-                currentLevel = null;
-                currentLevelNum = 0;
-            }else {
-                loadNextLevel();
-            }
+        if(levelCleared && currentLevelNum == levels.size() - 1) {
+            gamePanel.setState(GamePanel.GameState.MENU);
+            currentLevel = null;
+            currentLevelNum = -1;
+        }else if(levelCleared || currentLevel == null){
+            loadNextLevel();
         }
     }
 
@@ -71,10 +84,10 @@ public class GameLevelsManager {
         }
     }
 
-    private GameLevel createMap1() {
+    private GameLevel createLevel1() {
         return GameLevel.builder()
-                .withMap("map1")
-                .withTileManager(tileManager)
+                .withMap("level1")
+                .withTiledMapLoader(new TiledMapLoader())
                 .withEntity(EntityCreation.createPlayer(keyHandler, 450, 256))
                 .withEntity(EntityCreation.createBall(420, 276))
                 .withEntity(EntityCreation.createBall(540, 212))
@@ -84,25 +97,25 @@ public class GameLevelsManager {
                 .build();
     }
 
-    private GameLevel createMap2() {
+    private GameLevel createLevel2() {
         return GameLevel.builder()
-                .withMap("map2")
-                .withTileManager(tileManager)
+                .withMap("level2")
+                .withTiledMapLoader(new TiledMapLoader())
                 .withEntity(EntityCreation.createPlayer(keyHandler, 224.0, 128.0))
                 .withEntity(EntityCreation.createBall(260.0, 148.0))
                 .withEntity(EntityCreation.createBall(585.0, 340.0))
                 .withEntity(EntityCreation.createBall(672.0, 180.0))
-                .withEntity(EntityCreation.createDoor(256.0, 264.0))
+                .withEntity(EntityCreation.createDoor(230.0, 264.0))
                 .withEntity(EntityCreation.createDoor(786.0, 136.0))
                 .withEntity(EntityCreation.createBox(290.0, 131.0))
                 .build();
     }
 
 
-    private GameLevel createMap3() {
+    private GameLevel createLevel3() {
         return GameLevel.builder()
-                .withMap("map3")
-                .withTileManager(tileManager)
+                .withMap("level3")
+                .withTiledMapLoader(new TiledMapLoader())
                 .withEntity(EntityCreation.createPlayer(keyHandler, 192, 320))
                 .withEntity(EntityCreation.createBall(430, 404))
                 .withEntity(EntityCreation.createBall(704, 148))

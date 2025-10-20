@@ -27,7 +27,7 @@ public class Player extends MovingEntity {
         }
         if(keyHandler.rightPressed){
             setSpriteDirection(SpriteDirection.RIGHT);
-            setVelocityX(2.0);
+            setVelocityX(2);
         }
         if(!keyHandler.leftPressed && !keyHandler.rightPressed){
             setSpriteDirection(SpriteDirection.STAY);

@@ -5,13 +5,12 @@ import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener {
     public boolean leftPressed, rightPressed, upPressed;
-    public boolean restartPressed;
+
     private void switchVariables(int code, boolean b){
         switch (code) {
             case KeyEvent.VK_A -> leftPressed = b;
             case KeyEvent.VK_D -> rightPressed = b;
             case KeyEvent.VK_W -> upPressed = b;
-            case KeyEvent.VK_R -> restartPressed = b;
         }
     }
 

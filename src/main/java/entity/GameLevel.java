@@ -1,8 +1,8 @@
 package entity;
 
 import main.GamePanel;
+import tiles.TiledMapLoader;
 import tiles.Tile;
-import tiles.TileManager;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -12,13 +12,19 @@ import java.util.List;
 public class GameLevel {
     private final List<Entity> entities;
     private final String map;
-    private final TileManager tileManager;
+
+    private final TiledMapLoader mapLoader;
 
     public GameLevel(Builder builder){
         this.entities = Collections.unmodifiableList(builder.entities);
         this.map = builder.map;
-        this.tileManager = builder.tileManager;
-        tileManager.setMap(map);
+        this.mapLoader = builder.mapLoader;
+
+        try {
+            mapLoader.loadMapFromResources("assets/levels/" + this.map + ".tmx");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     protected boolean moveHorizontal(MovingEntity entity, double deltaTime) {
@@ -185,11 +191,11 @@ public class GameLevel {
     }
 
     protected Tile[] getTilesAfterMove(int rowIndex, int colIndex, int rowIndex2, int colIndex2){
-        Tile[] tiles = new Tile[tileManager.getMapLayers().length * 2];
+        Tile[] tiles = new Tile[mapLoader.getLayers().size() * 2];
         int index = 0;
-        for(Tile[][] tilesLayer : tileManager.getMapLayers()){
-            tiles[index] = tilesLayer[colIndex][rowIndex];
-            tiles[index + 1] = tilesLayer[colIndex2][rowIndex2];
+        for(TiledMapLoader.Layer layer : mapLoader.getLayers()){
+            tiles[index] = layer.mapTiles()[rowIndex][colIndex];
+            tiles[index + 1] = layer.mapTiles()[rowIndex2][colIndex2];
             index += 2;
         }
         return tiles;
@@ -215,18 +221,33 @@ public class GameLevel {
         return map;
     }
 
+    public TiledMapLoader getMapLoader(){
+        return mapLoader;
+    }
+
     public static class Builder {
         private final List<Entity> entities = new ArrayList<>();
         private String map;
-        private TileManager tileManager;
+        private TiledMapLoader mapLoader;
 
         public Builder withEntity(Entity entity) {
-            entities.add(entity);
-            return this;
-        }
+            if(entity == null){
+                throw new IllegalArgumentException("Entity cannot be null");
+            }
 
-        public Builder withEntities(List<Entity> entities) {
-            this.entities.addAll(entities);
+            if(entity.getPositionX() < 0){
+                throw new IllegalArgumentException("Trying to set positionX of entity = " + entity.getName() + " to " + entity.getPositionX() + " but it cannot be negative");
+            }else if(entity.getPositionY() < 0){
+                throw new IllegalArgumentException("Trying to set positionY of entity = " + entity.getName() + " to " + entity.getPositionY() + "but it cannot be negative");
+            }else if(entity.getWidth() <= 0){
+                throw new IllegalArgumentException("Trying to set width of entity = " + entity.getName() + "to " + entity.getWidth() + "but it cannot be negative or equal to 0");
+            }else if(entity.getHeight() <= 0){
+                throw new IllegalArgumentException("Trying to set height of entity = " + entity.getName() + "to " + entity.getHeight() + "but it cannot be negative or equal to 0");
+            }else if(entity.getPadding() < 0){
+                throw new IllegalArgumentException("Trying to set padding of entity = " + entity.getName() + "to " + entity.getPadding() + "but it cannot be negative");
+            }
+
+            entities.add(entity);
             return this;
         }
 
@@ -235,8 +256,8 @@ public class GameLevel {
             return this;
         }
 
-        public Builder withTileManager(TileManager tileManager) {
-            this.tileManager = tileManager;
+        public Builder withTiledMapLoader(TiledMapLoader mapLoader) {
+            this.mapLoader = mapLoader;
             return this;
         }
 
@@ -244,12 +265,21 @@ public class GameLevel {
             if (map == null) {
                 throw new IllegalStateException("GameLevel must have a map!");
             }
-            if (tileManager == null) {
-                throw new IllegalStateException("GameLevel must have a TileManager!");
+            if(mapLoader == null) {
+                throw new IllegalStateException("GameLevel must have a TiledMapLoader!");
             }
             boolean hasPlayer = entities.stream().anyMatch(e -> e instanceof Player);
             if (!hasPlayer) {
                 throw new IllegalStateException("GameLevel must contain a Player entity!");
+            }
+            boolean hasDoor = entities.stream().anyMatch(e -> e instanceof Door);
+            if (!hasDoor) {
+                throw new IllegalStateException("GameLevel must contain at least one Door entity!");
+            }
+            long numOfDoors = entities.stream().filter(e -> e instanceof Door).count();
+            long numOfBalls = entities.stream().filter(e -> e instanceof Ball).count();
+            if(numOfBalls < numOfDoors){
+                throw new IllegalStateException("GameLevel must have at least as many balls as doors!");
             }
             return new GameLevel(this);
         }

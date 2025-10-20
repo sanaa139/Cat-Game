@@ -1,7 +1,6 @@
 package entity;
 
 import java.awt.*;
-import java.io.IOException;
 
 public class Box extends PushableEntity {
     public Box(double positionX, double positionY, int width, int height, int padding, boolean isCollidable) {

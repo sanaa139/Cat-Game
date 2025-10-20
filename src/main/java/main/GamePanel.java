@@ -1,13 +1,10 @@
 package main;
 
 import entity.*;
-import tiles.TileManager;
-import tiles.TileManagerGame;
-import tiles.TileManagerMenu;
+import tiles.TiledMapLoader;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Comparator;
 
 public class GamePanel extends JPanel implements Runnable {
     public enum GameState {
@@ -22,11 +19,10 @@ public class GamePanel extends JPanel implements Runnable {
     public static final int SCREEN_HEIGHT = MAX_ROW_NUM * TILE_SIZE;
 
     private final KeyHandler keyHandler = new KeyHandler();
-    private final TileManager tileManagerGame = new TileManagerGame("map1");
-    private final GameLevelsManager gameLevelsManager = new GameLevelsManager(this, tileManagerGame, keyHandler);
+    private final GameLevelsManager gameLevelsManager = new GameLevelsManager(this, keyHandler);
 
     private volatile GameState state = GameState.MENU;
-    Menu menu = new Menu(this, new TileManagerMenu());
+    Menu menu = new Menu(this, new TiledMapLoader());
     Game game = new Game(this, gameLevelsManager);
     Thread gameThread;
     public int FPS = 60;
